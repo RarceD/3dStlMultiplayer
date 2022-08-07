@@ -3,7 +3,13 @@ import logo from './logo.svg';
 import './App.css';
 import Connector from './signalRConnection';
 import AnimatedPerson from './3dLoader/AnimatedPerson';
-import ButtonArray from './components/GUI/ButtonArray';
+import ButtonArray, { BtnProps } from './components/GUI/ButtonArray';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
+import Stack from '@mui/material/Stack';
+import AccessibleForward from '@mui/icons-material/AccessibleForward';
 
 // function App() {
 //   const { newMessage, events } = new Connector();
@@ -29,11 +35,29 @@ import ButtonArray from './components/GUI/ButtonArray';
 function App() {
   useEffect(() => {
   });
+  const [buttonArray, setButtonArray] = useState<BtnProps[]>([
+    {
+      name: "Delete",
+      icon: <DeleteIcon />,
+      callback: () => { console.log("delete") }
+    },
+    {
+      name: "send",
+      icon: <SendIcon />,
+      callback: () => { console.log("send") }
+    },
+    {
+      name: "Lol",
+      icon: <AccessibleForward />,
+      callback: () => { console.log("lol") }
+    }
+
+  ]);
   return (
     <div className="App">
-      <h1> raad rules</h1>
+      <h1> 3D STL PLAYER </h1>
       <AnimatedPerson />
-      <ButtonArray />
+      <ButtonArray btnProps={buttonArray} />
     </div>
   );
 }
