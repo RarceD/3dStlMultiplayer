@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Connector from './signalRConnection';
 import AnimatedPerson from './3dLoader/AnimatedPerson';
+import ButtonArray from './components/GUI/ButtonArray';
 
 // function App() {
 //   const { newMessage, events } = new Connector();
@@ -32,6 +33,7 @@ function App() {
     <div className="App">
       <h1> raad rules</h1>
       <AnimatedPerson />
+      <ButtonArray />
     </div>
   );
 }
