@@ -1,0 +1,25 @@
+﻿[
+  {
+    "Id": 1,
+    "Text": "cuanto has hecho algo",
+    "Responses": [
+      "resp A",
+      "resp B",
+      "resp C",
+      "resp D"
+    ],
+    "Answer": 0
+  },
+  {
+    "Id": 1,
+    "Text": "cuanto has hecho algo",
+    "Responses": [
+      "resp A",
+      "resp B",
+      "resp C",
+      "resp D"
+    ],
+    "Answer": 0
+  }
+
+]

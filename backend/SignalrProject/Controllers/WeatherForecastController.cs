@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Polly;
+using SignalrProject.Model;
 
 namespace SignalrProject.Controllers;
 
@@ -27,6 +28,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        _logger.LogDebug("test");
         // I just want to retry something
         var msg = JsonSerializer.Serialize(new WeatherForecast
         {

@@ -1,4 +1,4 @@
-namespace SignalrProject;
+namespace SignalrProject.Model;
 
 public class WeatherForecast
 {
