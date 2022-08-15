@@ -1,5 +1,12 @@
 ﻿namespace SignalrProject.Model
 {
+    public class QuestionResponse
+    {
+        public int Id { get; set; }
+        public int QuestionId { get; set; }
+        public int Response { get; set; }
+            
+    }
     public class Question
     {
         public Question(int id, string text)
