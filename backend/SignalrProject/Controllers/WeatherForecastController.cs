@@ -36,7 +36,7 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[0],
             TemperatureC = 123
         });
-        _hubContext.Clients.All.SendAsync("messageReceived", "test2", msg);
+        // _hubContext.Clients.All.SendAsync("messageReceived", "test2", msg);
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateTime.Now.AddDays(index),

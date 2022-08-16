@@ -10,28 +10,36 @@ import SendIcon from '@mui/icons-material/Send';
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import Stack from '@mui/material/Stack';
 import AccessibleForward from '@mui/icons-material/AccessibleForward';
+import { GameLoop } from './interfaces/GameLoop';
 
-// function App() {
-//   const { newMessage, events } = new Connector();
-//   const [message, setMessage] = useState("initial value");
-//   useEffect(() => {
-//     // events((a: any, message: any) => setMessage(message));
-//     const handleMessageReceived = (a: any, message: any) => {
-//       console.log("received", a, message);
-//       setMessage(message);
-//     }
-//     const handleSomeOtherServerEventReceived = (payload: any) => { console.log(payload); }
-//     events(handleMessageReceived, handleSomeOtherServerEventReceived);
-//   });
-//   return (
-//     <div className="App">
-//       <span>message from signalR: <span style={{ color: "green" }}>{message}</span> </span>
-//       <br />
-//       <button onClick={() => newMessage((new Date()).toISOString())}>send date </button>
-//     </div>
-//   );
-// }
+function App() {
+  const { newMessage, events } = new Connector();
+  const [message, setMessage] = useState("initial value");
+  useEffect(() => {
+    // events((a: any, message: any) => setMessage(message));
+    const handleMessageReceived = (a: any, message: any) => {
+      // console.log("received", a, message);
+      let test: GameLoop = JSON.parse(message);
+      console.log(test)
+      setMessage(message);
+    }
+    const handleSomeOtherServerEventReceived = (payload: any) => { console.log(payload); }
+    events(handleMessageReceived, handleSomeOtherServerEventReceived);
 
+    setTimeout(()=>{
+      console.log("asd");
+      newMessage((new Date()).toISOString());
+    }, 10000)
+  });
+  return (
+    <div className="App">
+      <span>message from signalR: <span style={{ color: "green" }}>{message}</span> </span>
+      <br />
+      <button onClick={() => newMessage((new Date()).toISOString())}>send date </button>
+    </div>
+  );
+}
+/*
 function App() {
   useEffect(() => {
   });
@@ -61,6 +69,7 @@ function App() {
     </div>
   );
 }
+*/
 
 export default App;
 
