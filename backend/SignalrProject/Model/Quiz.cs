@@ -6,8 +6,14 @@ namespace SignalrProject.Model
 {
     public class Quiz
     {
-        public Question[] Questions{ get; set; }
+        public Question[] Questions { get; set; }
         private List<Player> _players { get; set; }
+
+        // Time at questions: 
+        private static int _maxTimeAtQuestions = 10;
+        private int _counterTime = _maxTimeAtQuestions;
+
+        // Timers to control it:
         private Timer _timerRepeatTask;
         private AutoResetEvent _autoEvent = new AutoResetEvent(false);
         public enum GameStatusCodes
@@ -20,7 +26,9 @@ namespace SignalrProject.Model
 
         public Quiz()
         {
-            Questions = LoadJsonQuestions("Questions/questions.json");
+            Questions = LoadJsonQuestions("Questions/questions_real.json");
+            if (Questions.Length > 0)
+                Questions.ElementAt(0).Active = true;
             _players = new List<Player>();
             Player newPlayer = new(1, "ruben", "69");
             _players.Add(newPlayer);
@@ -28,7 +36,44 @@ namespace SignalrProject.Model
         }
         private void callbackTimer(object? state)
         {
+            switch (GameStatus)
+            {
+                case GameStatusCodes.WaitingPlayers:
+                    HandleWaitingPlayers();
+                    break;
+                case GameStatusCodes.OnGame:
+                    HandleOnGame();
+                    break;
+                case GameStatusCodes.End:
+                    HandleOnGame();
+                    break;
+                default:
+                    break;
+            }
             _autoEvent.Set();
+        }
+        private void HandleWaitingPlayers()
+        {
+
+        }
+        private void HandleOnGame()
+        {
+            if (_counterTime-- <= 0)
+            {
+                Console.WriteLine("restart timer");
+                _counterTime = _maxTimeAtQuestions;
+                // Update question:
+                int index = Questions.ToList().FindIndex(a => a.Active == true);
+                if (index <= Questions.Length - 2)
+                {
+                    Questions.ElementAt(index).Active = false;
+                    Questions.ElementAt(index + 1).Active = true;
+                }
+                else
+                {
+                    GameStatus = GameStatusCodes.End;
+                }
+            }
         }
         public int AddPlayer(string name, string position)
         {
@@ -63,7 +108,7 @@ namespace SignalrProject.Model
                 Question[] q = JsonSerializer.Deserialize<Question[]>(jsonString)!;
                 return q;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("There is no file, gilipollas");
                 Question[] q = new Question[0];
@@ -73,3 +118,4 @@ namespace SignalrProject.Model
         }
     }
 }
+

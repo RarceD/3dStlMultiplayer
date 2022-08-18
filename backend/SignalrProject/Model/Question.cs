@@ -14,11 +14,13 @@
             Id = id;
             Text = text;
             Responses = new List<string>();
+            Active = false;
         }
         public int Id { set; get; }
         public string Text { set; get; }
         public List<string> Responses { set; get; }
         public int Answer { set; get; }
+        public bool Active { set; get; }
 
     }
 }

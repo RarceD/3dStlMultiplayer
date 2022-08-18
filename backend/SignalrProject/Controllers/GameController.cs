@@ -32,6 +32,16 @@ namespace SignalrProject.Controllers
             else
                 return 0;
         }
+
+        [HttpGet]
+        public async Task<string> StartTheGame()
+        {
+            // if (id == (int)Quiz.GameStatusCodes.OnGame)
+            {
+                _quiz.GameStatus = Quiz.GameStatusCodes.OnGame;
+            }
+            return "ok";
+        }
         private void callbackTimer(object? state)
         {
             GameDto gameLoop = new GameDto();
