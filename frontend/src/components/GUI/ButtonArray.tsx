@@ -18,7 +18,8 @@ const ButtonArray = (props: Props) => {
     const { btnProps } = props;
 
     const arrayBtn = (b: BtnProps[]) => {
-        return b.map((key) => <Button
+        return b.map((key, index) => <Button
+            key={key.name}
             variant="contained"
             startIcon={key.icon}
             onClick={key.callback}
