@@ -31,4 +31,10 @@ public class CredentialsController : ControllerBase
         SuccessResponseDto success = new(id);
         return success;
     }
+
+    [HttpGet]
+    public Task<List<Player>> GetPlayers()
+    {
+        return Task.FromResult(_quiz.Players);
+    }
 }

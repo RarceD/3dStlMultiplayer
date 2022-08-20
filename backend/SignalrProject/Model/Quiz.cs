@@ -7,9 +7,10 @@ namespace SignalrProject.Model
     public class Quiz
     {
         public Question[] Questions { get; set; }
-        private List<Player> _players { get; set; }
+        public List<Player> Players { get; set; }
 
         // Time at questions: 
+        private static int _maxTimeAtResults = 5;
         private static int _maxTimeAtQuestions = 10;
         private int _counterTime = _maxTimeAtQuestions;
 
@@ -20,6 +21,7 @@ namespace SignalrProject.Model
         {
             WaitingPlayers = 0,
             OnGame,
+            Results,
             End
         }
         public GameStatusCodes GameStatus = GameStatusCodes.WaitingPlayers;
@@ -29,9 +31,9 @@ namespace SignalrProject.Model
             Questions = LoadJsonQuestions("Questions/questions_real.json");
             if (Questions.Length > 0)
                 Questions.ElementAt(0).Active = true;
-            _players = new List<Player>();
+            Players = new List<Player>();
             Player newPlayer = new(1, "ruben", "69");
-            _players.Add(newPlayer);
+            Players.Add(newPlayer);
             _timerRepeatTask = new Timer(callbackTimer, _autoEvent, 2000, 1000);
         }
         private void callbackTimer(object? state)
@@ -44,8 +46,11 @@ namespace SignalrProject.Model
                 case GameStatusCodes.OnGame:
                     HandleOnGame();
                     break;
+                case GameStatusCodes.Results:
+                    HandleResults();
+                    break;
                 case GameStatusCodes.End:
-                    HandleOnGame();
+                    HandleEnd();
                     break;
                 default:
                     break;
@@ -53,6 +58,19 @@ namespace SignalrProject.Model
             _autoEvent.Set();
         }
         private void HandleWaitingPlayers()
+        {
+
+        }
+        private void HandleResults()
+        {
+
+            if (_counterTime-- <= 0)
+            {
+                GameStatus = GameStatusCodes.OnGame;
+                _counterTime = _maxTimeAtQuestions;
+            }
+        }
+        private void HandleEnd()
         {
 
         }
@@ -68,6 +86,8 @@ namespace SignalrProject.Model
                 {
                     Questions.ElementAt(index).Active = false;
                     Questions.ElementAt(index + 1).Active = true;
+                    GameStatus = GameStatusCodes.Results;
+                    _counterTime = _maxTimeAtResults;
                 }
                 else
                 {
@@ -77,9 +97,9 @@ namespace SignalrProject.Model
         }
         public int AddPlayer(string name, string position)
         {
-            int id = _players.Count();
+            int id = Players.Count();
             Player newPlayer = new(id, name, position);
-            _players.Add(newPlayer);
+            Players.Add(newPlayer);
             return id;
         }
         public bool RemovePlayer(int id)
@@ -89,7 +109,7 @@ namespace SignalrProject.Model
 
         public bool AddQuizResponse(int playerId, int questionId, int response)
         {
-            foreach (Player play in _players.Where(p => p.Id == playerId))
+            foreach (Player play in Players.Where(p => p.Id == playerId))
             {
                 foreach (var q in Questions.Where(qu => qu.Id == questionId && response == qu.Answer))
                 {
