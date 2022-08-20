@@ -41,11 +41,8 @@ export const Login = () => {
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
             .then(response => {
-                console.log(response);
-                console.log('Success:', response["id"])
-                localStorage.setItem("id", response["id"]);
-                localStorage.setItem("token", response["token"]);
-                navigate('/main');
+                // console.log(response);
+                navigate('/waiting');
             });
     }
 
@@ -87,7 +84,6 @@ export const Login = () => {
                             error={errorSubmit}
                             name="password"
                             label="Postura sexual favorita"
-                            type="password"
                             onChange={(e: any) => { setPass(e.target.value); }}
                         />
                         <FormControlLabel

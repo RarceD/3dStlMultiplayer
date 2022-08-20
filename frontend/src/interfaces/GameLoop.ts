@@ -6,6 +6,7 @@ export interface GameLoop {
 export enum GameState {
     WaitingPlayers = 0,
     OnGame,
+    Results,
     End
 }
 

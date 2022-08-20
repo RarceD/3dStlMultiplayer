@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import NoPulse from './pages/NoPulse';
 import Privacity from './pages/Privacity';
 import Waiting from './pages/Waiting';
+import Config from './pages/Config';
 
 function App() {
   const [message, setMessage] = useState("initial value");
@@ -17,8 +18,8 @@ function App() {
     // events((a: any, message: any) => setMessage(message));
     const handleMessageReceived = (a: any, message: any) => {
       // console.log("received", a, message);
-      let test: GameLoop = JSON.parse(message);
-      console.log(test)
+      // let test: GameLoop = JSON.parse(message);
+      // console.log(test)
       setMessage(message);
     }
     const handleSomeOtherServerEventReceived = (payload: any) => { console.log(payload); }
@@ -36,6 +37,7 @@ function App() {
         <Route path="/noPulse" element={<NoPulse />} />
         <Route path="/privacity" element={<Privacity />} />
         <Route path="/waiting" element={<Waiting />} />
+        <Route path="/config" element={<Config />} />
         <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>
