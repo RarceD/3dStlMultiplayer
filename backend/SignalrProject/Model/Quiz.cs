@@ -32,8 +32,6 @@ namespace SignalrProject.Model
             if (Questions.Length > 0)
                 Questions.ElementAt(0).Active = true;
             Players = new List<Player>();
-            Player newPlayer = new(1, "ruben", "69");
-            Players.Add(newPlayer);
             _timerRepeatTask = new Timer(callbackTimer, _autoEvent, 2000, 1000);
         }
         private void callbackTimer(object? state)

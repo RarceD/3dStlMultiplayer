@@ -8,7 +8,7 @@ using System.Text.Json;
 namespace SignalrProject.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class GameController : ControllerBase
     {
@@ -42,12 +42,21 @@ namespace SignalrProject.Controllers
             }
             return "ok";
         }
+
+        [HttpGet("status")]
+        public async Task<int> GetStatusGame()
+        {
+            return (int)_quiz.GameStatus;
+        }
+
         private void callbackTimer(object? state)
         {
+            /*
             GameDto gameLoop = new GameDto();
             var msg = JsonSerializer.Serialize(gameLoop.ParseQuiz(_quiz));
             _hubContext.Clients.All.SendAsync("messageReceived","test2", msg);
             Console.WriteLine($"send{msg}");
+            */
         }
     }
 }

@@ -33,8 +33,15 @@ public class CredentialsController : ControllerBase
     }
 
     [HttpGet]
-    public Task<List<Player>> GetPlayers()
+    public Task<List<Player>> GetPlayers(int? clear)
     {
+        if (clear == null)
+        {
+            return Task.FromResult(_quiz.Players);
+        }
+        // Restart the list:
+        _quiz.Players = new List<Player>();
+        _quiz.GameStatus = Quiz.GameStatusCodes.WaitingPlayers;
         return Task.FromResult(_quiz.Players);
     }
 }
