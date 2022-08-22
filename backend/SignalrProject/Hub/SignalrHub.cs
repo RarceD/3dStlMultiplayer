@@ -1,6 +1,18 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 public class SignalrHub : Hub
 {
+    private float _position;
+
+    public SignalrHub()
+    {
+        _position = 0.0f;
+    }
+    public async Task SendPosition(int left, int top)
+    {
+        _position++;
+        await Clients.All.SendAsync("ReceivePosition",left, _position);
+    }
+
     public async Task NewMessage(string user, string message)
     {
         Console.WriteLine("user" + user + message);
