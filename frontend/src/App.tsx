@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import Connector from './signalRConnection';
 
 import { GameLoop } from './interfaces/GameLoop';
@@ -13,6 +12,7 @@ import Config from './pages/Config';
 
 function App() {
   const [message, setMessage] = useState("initial value");
+  /*
   const { newMessage, events } = new Connector();
   useEffect(() => {
     // events((a: any, message: any) => setMessage(message));
@@ -25,11 +25,13 @@ function App() {
     const handleSomeOtherServerEventReceived = (payload: any) => { console.log(payload); }
     events(handleMessageReceived, handleSomeOtherServerEventReceived);
 
+
     setTimeout(() => {
-      console.log("asd");
+      console.log("send data");
       newMessage((new Date()).toISOString());
-    }, 10000)
+    }, 1000)
   });
+  */
   return (
     <BrowserRouter>
       <Routes>

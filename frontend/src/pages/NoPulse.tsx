@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import '../App.css';
+ 
 const NoPulse = () => {
     return (
         <div className="App">

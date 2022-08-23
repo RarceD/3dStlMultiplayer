@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import '../App.css';
+ 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -60,8 +60,12 @@ const Waiting = () => {
       });
   }
   useEffect(() => {
-    setInterval(() => CheckUsers(), 2000)
-    setInterval(() => GetGameStatus(), 1000)
+    const intervalUser = setInterval(() => CheckUsers(), 2000);
+    const intervalStatus = setInterval(() => GetGameStatus(), 1000);
+    return () => {
+      clearInterval(intervalUser);
+      clearInterval(intervalStatus);
+    }
   }, [])
 
   const ShowPlayers = (players: Player[]) => {
