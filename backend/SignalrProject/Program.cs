@@ -2,6 +2,11 @@ using SignalrProject.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(p => p.AddPolicy("*", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -12,13 +17,10 @@ builder.Services.AddCors();
 // Quiz data:
 builder.Services.AddSingleton<Quiz>();
 
-builder.Services.AddCors(p => p.AddPolicy("*", builder =>
-{
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+/*
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -30,14 +32,20 @@ if (app.Environment.IsDevelopment())
                 .AllowCredentials()
             );
 }
+*/
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 // app.UseAuthorization();
 app.MapControllers();
 app.UseRouting();
-app.UseCors("*");
+app.UseCors(builder => builder
+               .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed(_ => true)
+                .AllowCredentials()
+            );
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<SignalrHub>("/hub"); 
+    endpoints.MapHub<SignalrHub>("/hub");
 });
 app.Run();
