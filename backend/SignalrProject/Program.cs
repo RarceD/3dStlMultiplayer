@@ -16,11 +16,11 @@ builder.Services.AddCors();
 
 // Quiz data:
 builder.Services.AddSingleton<Quiz>();
+builder.Services.AddSingleton<Bulling>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-/*
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -32,7 +32,6 @@ if (app.Environment.IsDevelopment())
                 .AllowCredentials()
             );
 }
-*/
 
 // app.UseHttpsRedirection();
 // app.UseAuthorization();
