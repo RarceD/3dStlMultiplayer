@@ -4,12 +4,13 @@ import Connector from './signalRConnection';
 import { GameLoop } from './interfaces/GameLoop';
 import Main from './pages/Main';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
+// import Login from './pages/Login';
 import NoPulse from './pages/NoPulse';
 import Privacity from './pages/Privacity';
 import Waiting from './pages/Waiting';
 import Config from './pages/Config';
-
+import Comments from './pages/Comments';
+import ThreeD from './pages/ThreeD';
 function App() {
   const [message, setMessage] = useState("initial value");
   /*
@@ -40,9 +41,10 @@ function App() {
         <Route path="/privacity" element={<Privacity />} />
         <Route path="/waiting" element={<Waiting />} />
         <Route path="/config" element={<Config />} />
-        <Route path="*" element={<Login />} />
+        <Route path="/3d" element={<ThreeD />} />
       </Routes>
     </BrowserRouter>
   );
 }
 export default App;
+        //<Route path="*" element={<Login />} />
