@@ -1,3 +1,4 @@
+using SignalrProject.DB;
 using SignalrProject.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,8 +18,11 @@ builder.Services.AddCors();
 // Quiz data:
 builder.Services.AddSingleton<Quiz>();
 builder.Services.AddSingleton<Bulling>();
+DbClients d = new DbClients();
+builder.Services.AddSingleton<DbClients>(d);
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

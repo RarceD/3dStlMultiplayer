@@ -34,16 +34,6 @@ namespace SignalrProject.Controllers
             _bullingData.AddMsg(msg);
             return "ok";
         }
-
-        private void callbackTimer(object? state)
-        {
-            /*
-            GameDto gameLoop = new GameDto();
-            var msg = JsonSerializer.Serialize(gameLoop.ParseQuiz(_quiz));
-            _hubContext.Clients.All.SendAsync("messageReceived","test2", msg);
-            Console.WriteLine($"send{msg}");
-            */
-        }
     }
 }
 
