@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { randomBytes } from 'crypto';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { Button, Fab, TextField } from '@mui/material';
+import { Button, Fab, Grid, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 
@@ -113,29 +113,60 @@ const Wedding = () => {
 
   return (
     <>
-      <Typography variant="h5" component="h2" align='center'>
-         ...
-      </Typography>
-      <Typography variant="h4" component="h2" align='center'>
-        Libro de visitas
-      </Typography>
-      <Typography variant="h5" component="h2" align='center'>
-         ...
-      </Typography>
+
+      <Grid
+        container
+        spacing={6}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '80vh' }}
+      >
+        <Grid item xs={12} >
+          <img src={"images/book2.png"} height={60} style={{marginTop:'40px'}}/>
+        </Grid>
+        <Grid item xs={12} >
+          <Typography variant="h4" component="h2" align='center'>
+            Libro de visitas
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <img src={"images/book.png"} height={60} />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Typography variant="h6" component="h6" align='center'>
+            Bienvenido al libro de visitas, si quieres dejar un mensaje pulsa el botón, en caso contrario haz scroll hacia abajo y lee los comentarios de otras personas. Los mensajes son anónimos pero siempre puedes añadir tu nombre.
+          </Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Button
+            // type="submit"
+            fullWidth
+            variant="contained"
+            onClick={handleOpen}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Publicar mensaje
+          </Button>
+
+        </Grid>
+
+        <Grid item xs={12}>
+          <Typography variant="h6" component="h6" align='justify'>
+            Muchas gracias
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h1" component="h1" align='center'>
+          </Typography>
+        </Grid>
+      </Grid>
+
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {ShowPlayers(weddingMsg)}
       </List>
-
-
-      <Button
-        // type="submit"
-        fullWidth
-        variant="contained"
-        onClick={handleOpen}
-        sx={{ mt: 3, mb: 2 }}
-      >
-        Publicar mensaje
-      </Button>
 
     </>
   );

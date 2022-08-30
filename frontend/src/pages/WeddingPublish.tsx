@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { URL_REQUEST } from '../util/util';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { Button, Container, TextField } from '@mui/material';
+import { Button, Container, Grid, TextField } from '@mui/material';
 
 
 
@@ -14,7 +14,11 @@ const WeddingPublish = () => {
   const navigate = useNavigate();
 
   const handleOpen = () => {
-    console.log(msg);
+    try {
+        
+    } catch (e: any) {
+
+    }
     if (msg.length < 10) return;
 
 
@@ -40,38 +44,60 @@ const WeddingPublish = () => {
         }
       });
   }
+  const handleClose = () => {
+    navigate("/wedding");
+  }
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
-        <Box
-          component="div"
-        >
+
+      <Grid
+        container
+        spacing={3}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '100vh', minWidth: '100%' }}
+      >
+        <Grid item xs={12} >
           <Typography component="h1" variant="h5">
-            Añadir mensaje
+            Añadir mensaje:
           </Typography>
-          <Box component="form" sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              fullWidth
-              label="Deja un mensaje para la pareja:"
-              name="Deja un mensaje para la pareja:"
-              autoFocus
-              onChange={(e: any) => { setMsg(e.target.value); }}
-            />
+        </Grid>
+        <Grid item xs={12} >
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Deja un mensaje para la pareja:"
+            name="Deja un mensaje para la pareja:"
+            multiline
+            rows={12}
+            onChange={(e: any) => { setMsg(e.target.value); }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            fullWidth
+            size='large'
+            variant="contained"
+            onClick={handleOpen}
+          >
+            Publicar mensaje
+          </Button>
+        </Grid>
 
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleOpen}
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Publicar mensaje
-            </Button>
+        <Grid item xs={12}>
+          <Button
+            fullWidth
+            size='large'
+            variant="outlined"
+            onClick={handleClose}
+          >
+            salir
+          </Button>
+        </Grid>
+      </Grid>
 
-          </Box>
-        </Box>
-      </Container>
 
 
     </>

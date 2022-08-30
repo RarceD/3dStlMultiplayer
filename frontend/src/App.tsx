@@ -11,6 +11,8 @@ import Waiting from './pages/Waiting';
 import Config from './pages/Config';
 import Comments from './pages/Comments';
 import ThreeD from './pages/ThreeD';
+import Wedding from './pages/Wedding';
+import WeddingPublish from './pages/WeddingPublish';
 function App() {
   const [message, setMessage] = useState("initial value");
   /*
@@ -41,6 +43,8 @@ function App() {
         <Route path="/privacity" element={<Privacity />} />
         <Route path="/waiting" element={<Waiting />} />
         <Route path="/config" element={<Config />} />
+        <Route path="/wedding" element={<Wedding />} />
+        <Route path="/wedding/publish" element={<WeddingPublish />} />
         <Route path="/3d" element={<ThreeD />} />
       </Routes>
     </BrowserRouter>
