@@ -16,12 +16,12 @@ interface Props {
 
 const Box = (props: Props) => {
   const addComponent = (e: any) => {
-    console.log("press box", e);
-    props.addCubes(2)
+    var p = e.point;
+    props.addCubes(p.x, p.y, p.z)
   }
   return (
     <>
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI, 0, 0]}
+      <mesh position={[2, 0, 0]} rotation={[0, 0, Math.PI]}
         onPointerMissed={() => props.removeCubes()}
         onPointerUp={(e) => addComponent(e)}
       >
@@ -32,71 +32,101 @@ const Box = (props: Props) => {
   )
 }
 
-const Plane = () => {
-  return (
-    <mesh position={[0, 0, 0]} rotation={[-Math.PI, 0, 0]}>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <meshLambertMaterial attach="material" color="hotpink" />
-    </mesh>
-  )
+interface CubeProps {
+  x: number,
+  y: number,
+  z: number
 }
-
 const ThreeD = () => {
   const [geometry, setGeometry] = useState<BufferGeometry>()
-  const [arrayCubes, setArrayCubes] = useState<number[]>([])
+  const [arrayCubes, setArrayCubes] = useState<CubeProps[]>([])
 
   useEffect(() => {
     const stlLoader = new STLLoader()
-    stlLoader.load("/Models/colored.stl", geo => {
+    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
       setGeometry(geo)
     })
+
+    setTimeout(makeMagic.bind(this), 5000);
   }, [])
+
+  const makeMagic = () => {
+    // console.log("magic");
+    // const stlLoader = new STLLoader()
+    // stlLoader.load("/Models/CuteUnicorn.stl", geo => {
+      // setGeometry(geo)
+    // })
+  }
+
+  const addToUnicorn = (e: any) => {
+    console.log(e);
+    var p = e.point;
+    const cube: CubeProps = {
+      x: p.x, y: p.y, z: p.z
+    }
+    let cc: CubeProps[] = [];
+    cc.push(cube)
+    setArrayCubes(cc);
+  }
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
 
       <Canvas>
         <OrbitControls />
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.8} />
         <Stars count={99990} />
         <spotLight
           angle={0.3}
           position={[10, 15, 10]}
         />
-        <Box addCubes={() => {
-          let size: number = arrayCubes.length;
-          let a: number[] = [];
-          for (let i = 0; i <= size; i++)
-            a.push(i)
-          setArrayCubes(a);
-        }}
-          removeCubes={() => {
-            let size: number = arrayCubes.length - 2;
-            if (size > 0) {
-
-              let a: number[] = [];
-              for (let i = 0; i <= size; i++)
-                a.push(i)
-              console.log("size", size);
-              setArrayCubes(a);
+        <spotLight
+          angle={0.3}
+          position={[-10, 15, 10]}
+        />
+        <Box
+          addCubes={(x: number, y: number, z: number) => {
+            let cc: CubeProps[] = [];
+            for (let i of arrayCubes)
+              cc.push(i)
+            let c: CubeProps = {
+              x: x,
+              y: y,
+              z: z
             }
+            cc.push(c)
+            setArrayCubes(cc);
+          }}
+          removeCubes={() => {
 
           }} />
 
 
-        <mesh geometry={geometry} position={[1, 0, 0]}
-          rotation={[0, 3, 2]}
+        <mesh geometry={geometry}
+          //scale={[0.04, 0.04, 0.04]}
+          // position={[0, -1, -1]}
+          position={[0, 0, 2]}
+          scale={[0.4, 0.4, 0.4]}
+          rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
+          onPointerUp={(e) => addToUnicorn(e)}
         >
-          <meshStandardMaterial color="#cc00cc" />
+          <meshStandardMaterial
+            color="#cc0000" />
         </mesh>
 
         {
-          arrayCubes.map((key, index) => <mesh position={[index, 2, 0]}
-
-            rotation={[0, 3, 2]}
-          >
-            <boxBufferGeometry attach="geometry" />
-            <meshStandardMaterial color="#cc0000" />
-          </mesh>
+          arrayCubes.map((key, index) => {
+            return <mesh
+              key={index}
+              position={[key.x, key.y, key.z]}
+              rotation={[0, 3, 2]}
+              scale={[0.1, 0.1, 0.1]}
+            >
+              <boxBufferGeometry
+                attach="geometry"
+              />
+              <meshStandardMaterial color="#000000" />
+            </mesh>;
+          }
           )
         }
 
