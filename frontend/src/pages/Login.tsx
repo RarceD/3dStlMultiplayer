@@ -52,6 +52,7 @@ export const Login = () => {
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
+                    component="form"
                     sx={{
                         marginTop: 20,
                         display: 'flex',
@@ -116,6 +117,6 @@ export const Login = () => {
                 </Box>
             </Container>
         </>
-    )
+    );
 }
 export default Login;

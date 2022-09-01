@@ -15,17 +15,19 @@ export default class Connector {
             .withAutomaticReconnect()
             .build();
         this.connection.start().catch(err => document.write(err));
-        this.events = (onMessageReceived) => {
+        // this.events = (onMessageReceived) => {
+            // this.connection.on("messageReceived", (username, message) => {
+                // onMessageReceived(username, message);
+            // });
+        // };
+        this.events = (onMessageReceived, onLocationReceived) => {
             this.connection.on("messageReceived", (username, message) => {
+                // console.log("onMessageReceived");
                 onMessageReceived(username, message);
             });
-        };
-        this.events = (onMessageReceived, onSomeOtherServerEventReceived) => {
-            this.connection.on("messageReceived", (username, message) => {
-                onMessageReceived(username, message);
-            });
-            this.connection.on("somethingDefinedOnServer", (payload) => {
-                onSomeOtherServerEventReceived(payload);
+            this.connection.on("locationBackendSend", (payload) => {
+                // console.log("locationBackendSend");
+                onLocationReceived(payload);
             });
         };
     }

@@ -8,6 +8,8 @@ import { Physics } from '@react-three/cannon';
 import { BufferGeometry } from 'three'
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import Connector from '../signalRConnection';
+import { CubeProps } from '../interfaces/Cubes';
 
 interface Props {
   addCubes: any,
@@ -32,14 +34,20 @@ const Box = (props: Props) => {
   )
 }
 
-interface CubeProps {
-  x: number,
-  y: number,
-  z: number
+
+
+interface PropsThree {
+  sendWsMsg: (msg: string) => void,
+  spots: CubeProps[]
 }
-const ThreeD = () => {
+const ThreeD = (props: PropsThree) => {
+  const {spots} = props;
   const [geometry, setGeometry] = useState<BufferGeometry>()
   const [arrayCubes, setArrayCubes] = useState<CubeProps[]>([])
+
+  console.log("---------all the spots --------");
+  console.log(spots);
+
 
   useEffect(() => {
     const stlLoader = new STLLoader()
@@ -54,19 +62,23 @@ const ThreeD = () => {
     // console.log("magic");
     // const stlLoader = new STLLoader()
     // stlLoader.load("/Models/CuteUnicorn.stl", geo => {
-      // setGeometry(geo)
+    // setGeometry(geo)
     // })
   }
 
   const addToUnicorn = (e: any) => {
-    console.log(e);
+    // console.log(e);
     var p = e.point;
     const cube: CubeProps = {
       x: p.x, y: p.y, z: p.z
     }
     let cc: CubeProps[] = [];
+    for (let c of arrayCubes)
+      cc.push(c)
     cc.push(cube)
     setArrayCubes(cc);
+    let msg: string = cube.x.toString() + ";" + cube.y.toString() + ";" + cube.z.toString();
+    props.sendWsMsg(msg);
   }
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -85,7 +97,9 @@ const ThreeD = () => {
         />
         <Box
           addCubes={(x: number, y: number, z: number) => {
+            console.log("test")
             let cc: CubeProps[] = [];
+            setArrayCubes([]);
             for (let i of arrayCubes)
               cc.push(i)
             let c: CubeProps = {
@@ -94,7 +108,10 @@ const ThreeD = () => {
               z: z
             }
             cc.push(c)
-            setArrayCubes(cc);
+            c.x += 0.1;
+            cc.push(c)
+
+            //setArrayCubes(cc);
           }}
           removeCubes={() => {
 
@@ -125,6 +142,23 @@ const ThreeD = () => {
                 attach="geometry"
               />
               <meshStandardMaterial color="#000000" />
+            </mesh>;
+          }
+          )
+        }
+
+        {
+          spots.map((key, index) => {
+            return <mesh
+              key={index}
+              position={[key.x, key.y, key.z]}
+              rotation={[0, 3, 2]}
+              scale={[0.1, 0.1, 0.1]}
+            >
+              <boxBufferGeometry
+                attach="geometry"
+              />
+              <meshStandardMaterial color="#ff00ff" />
             </mesh>;
           }
           )
