@@ -13,9 +13,28 @@ namespace SignalrProject.DB
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText =@"INSERT INTO users (Msg) VALUES ($msg);";
+                command.CommandText = @"INSERT INTO users (Msg) VALUES ($msg);";
                 command.Parameters.AddWithValue("$msg", msg);
                 var reader = command.ExecuteReader();
+            }
+        }
+        public bool DeleteMessage(int msgId)
+        {
+            try
+            {
+                using (var connection = new Microsoft.Data.Sqlite.SqliteConnection(_connStr))
+                {
+                    connection.Open();
+                    var command = connection.CreateCommand();
+                    command.CommandText = @"DELETE FROM users WHERE Id=$msg;";
+                    command.Parameters.AddWithValue("$msg", msgId);
+                    var reader = command.ExecuteReader();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
         public List<WeddingMsgDto> AllMsg()
@@ -25,7 +44,7 @@ namespace SignalrProject.DB
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText =@"SELECT *FROM users";
+                command.CommandText = @"SELECT *FROM users";
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
