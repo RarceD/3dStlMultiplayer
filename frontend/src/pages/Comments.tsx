@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { URL_REQUEST } from '../util/util';
-import { Search } from '@mui/icons-material';
-import { AppBar, Avatar, Button, Divider, Grid, IconButton, InputBase, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled } from '@mui/material/styles';
-import InboxIcon from '@mui/icons-material/Inbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
+import { Avatar, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CommentsDto } from '../interfaces/Wedding';
@@ -33,7 +26,7 @@ function Comments() {
       .then(response => response.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
-        console.log("--------status", response, gameStatus);
+        //console.log("--------status", response, gameStatus);
         setComments(response)
       });
   }

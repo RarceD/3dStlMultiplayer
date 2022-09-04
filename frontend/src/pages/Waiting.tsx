@@ -68,7 +68,7 @@ const Waiting = () => {
     }
   }, [])
 
-  const ShowPlayers = (players: Player[]) => {
+  const ShowPlayersWaiting = (players: Player[]) => {
     return (
       players.map((p, index) =>
         <>
@@ -112,7 +112,7 @@ const Waiting = () => {
         Lista de gente:
       </div>
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {ShowPlayers(players)}
+        {ShowPlayersWaiting(players)}
       </List>
     </>
   );
