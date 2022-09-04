@@ -41,13 +41,9 @@ interface PropsThree {
   spots: CubeProps[]
 }
 const ThreeD = (props: PropsThree) => {
-  const {spots} = props;
+  const [periodicUpdate, setPediodicUpdate] = useState<boolean>(true)
   const [geometry, setGeometry] = useState<BufferGeometry>()
   const [arrayCubes, setArrayCubes] = useState<CubeProps[]>([])
-
-  console.log("---------all the spots --------");
-  console.log(spots);
-
 
   useEffect(() => {
     const stlLoader = new STLLoader()
@@ -55,11 +51,20 @@ const ThreeD = (props: PropsThree) => {
       setGeometry(geo)
     })
 
-    setTimeout(makeMagic.bind(this), 5000);
-  }, [])
+    //setTimeout(makeMagic.bind(this), 5000);
+    setInterval(() => {
+      let a: CubeProps[] = [];
+      for (let x of arrayCubes)
+        a.push(x);
+      setArrayCubes(a);
+    }
+      , 5000);
+  }, [setArrayCubes])
 
   const makeMagic = () => {
-    // console.log("magic");
+    let a = arrayCubes;
+    setArrayCubes(a);
+    console.log("magic change");
     // const stlLoader = new STLLoader()
     // stlLoader.load("/Models/CuteUnicorn.stl", geo => {
     // setGeometry(geo)
@@ -148,7 +153,7 @@ const ThreeD = (props: PropsThree) => {
         }
 
         {
-          spots.map((key, index) => {
+          props.spots.map((key, index) => {
             return <mesh
               key={index}
               position={[key.x, key.y, key.z]}
@@ -158,7 +163,7 @@ const ThreeD = (props: PropsThree) => {
               <boxBufferGeometry
                 attach="geometry"
               />
-              <meshStandardMaterial color="#ff00ff" />
+              <meshStandardMaterial color="#0f0f0f" />
             </mesh>;
           }
           )

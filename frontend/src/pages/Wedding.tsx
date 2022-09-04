@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { Player } from '../interfaces/Players';
 import { URL_REQUEST } from '../util/util';
 import { GameState } from '../interfaces/GameLoop';
-import { WeddingDto } from '../interfaces/Wedding';
+import { CommentsDto } from '../interfaces/Wedding';
 import { useNavigate } from 'react-router-dom';
 import { randomBytes } from 'crypto';
 import Box from '@mui/material/Box';
@@ -33,7 +33,7 @@ const style = {
 };
 
 const Wedding = () => {
-  const [weddingMsg, setWeddingMsg] = useState<WeddingDto[]>([]);
+  const [weddingMsg, setWeddingMsg] = useState<CommentsDto[]>([]);
   const [gameStatus, setGameStatus] = useState<number>(0);
   const [msg, setMsg] = useState<string>("");
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const Wedding = () => {
       .then(response => response.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
-        let playersNew: WeddingDto[] = response;
+        let playersNew: CommentsDto[] = response;
         if (playersNew.length !== weddingMsg.length) {
           // console.log("update players", playersNew)
           setWeddingMsg(playersNew);
@@ -76,7 +76,7 @@ const Wedding = () => {
     }
   }, [])
 
-  const ShowPlayers = (players: WeddingDto[]) => {
+  const ShowPlayers = (players: CommentsDto[]) => {
 
     return (
       players.map((p, index) =>

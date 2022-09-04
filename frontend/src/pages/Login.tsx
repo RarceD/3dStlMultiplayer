@@ -108,8 +108,8 @@ export const Login = () => {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link variant="body2" href="noPulse">
-                                    No pulsar
+                                <Link variant="body2" href="comments">
+                                    Añadir comentarios
                                 </Link>
                             </Grid>
                         </Grid>

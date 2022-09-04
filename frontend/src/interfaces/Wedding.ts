@@ -1,4 +1,4 @@
-export interface WeddingDto {
+export interface CommentsDto {
     id: number,
     msg: string
 }
