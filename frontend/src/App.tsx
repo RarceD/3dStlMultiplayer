@@ -14,47 +14,43 @@ import { CubeProps } from './interfaces/Cubes';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import Comments from './pages/Comments';
 import CommentsPublish from './pages/CommentsPublish';
+import { GameLoop, GameState } from './interfaces/GameLoop';
 
 function App() {
   const [message, setMessage] = useState("initial value");
+  const [gameStatus, setGameStatus] = useState<GameLoop>();
   const [spots, setSpots] = useState<CubeProps[]>([]);
 
   const { newMessage, events } = new Connector();
   useEffect(() => {
 
-    const handleMessageReceived = (a: any, message: any) => {
-      setMessage(message);
+    // Get info from game status:
+    const func1 = (a: any, b: any) => {
+      console.log("func1", a, b);
     }
-    events(handleMessageReceived, (payload: any) => {
-      console.log("MessageReceived", payload);
-    })
-
-
-    const onLocationReceived = (a: any, message: any) => {
-      console.log("onLocationReceived", a, message)
-    }
-    events(onLocationReceived, (a: any) => {
+    const onLocationReceived = (a: any) => {
       console.log("onLocationReceived", a);
       let pos: string = a;
       let posValues: string[] = pos.split(";");
       let newCube: CubeProps = {
-        x: Number(posValues[0].substring(0,8).replace(",", ".")),
-        y: Number(posValues[1].substring(0,8).replace(",", ".")),
-        z: Number(posValues[2].substring(0,8).replace(",", ".")),
+        x: Number(posValues[0].substring(0, 8).replace(",", ".")),
+        y: Number(posValues[1].substring(0, 8).replace(",", ".")),
+        z: Number(posValues[2].substring(0, 8).replace(",", ".")),
       }
       let copyCubes = spots;
       copyCubes.push(newCube)
       setSpots(copyCubes);
-    });
+    }
+    const onGameStatusReceived = (a: any) => {
+      console.log("gameState:", a.state);
+    }
+    events(func1, onLocationReceived, onGameStatusReceived);
 
-
-
-
-    setTimeout(() => {
-      console.log("send data");
-      //newMessage((new Date()).toISOString());
-    }, 1000)
   });
+
+  setTimeout(() => {
+    // console.log("send data");
+  }, 1000);
 
   return (
     <BrowserRouter>

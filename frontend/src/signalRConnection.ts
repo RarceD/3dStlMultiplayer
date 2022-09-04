@@ -4,8 +4,10 @@ const URL = process.env.HUB_ADDRESS ?? "https://localhost:44359/hub"; //or whate
 export default class Connector {
     private connection: signalR.HubConnection;
     // public events: (onMessageReceived: (username: string, message: string) => void) => void;
-    public events: (onMessageReceived: (username: string, message: string) => void,
-        onSomeOtherServerEventReceived: (payload: any) => void
+    public events: (
+        onMessageReceived: (username: string, message: string) => void,
+        onSomeOtherServerEventReceived: (payload: any) => void,
+        onGameStatusReceived: (payload: any) => void
     ) => void;
 
     static instance: Connector;
@@ -20,7 +22,7 @@ export default class Connector {
                 // onMessageReceived(username, message);
             // });
         // };
-        this.events = (onMessageReceived, onLocationReceived) => {
+        this.events = (onMessageReceived, onLocationReceived, onGameStatusReceived) => {
             this.connection.on("messageReceived", (username, message) => {
                 // console.log("onMessageReceived");
                 onMessageReceived(username, message);
@@ -29,7 +31,12 @@ export default class Connector {
                 // console.log("locationBackendSend");
                 onLocationReceived(payload);
             });
+            this.connection.on("gameStatusBackendSend", (payload) => {
+                // console.log("gameStatusBackendSend", a, b, c);
+                onGameStatusReceived(payload);
+            });
         };
+
     }
     public newMessage = (messages: string) => {
         this.connection.send("newMessage", "foo", messages).then(x => console.log("sent"))

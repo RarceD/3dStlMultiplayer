@@ -20,6 +20,8 @@ builder.Services.AddSingleton<Quiz>();
 builder.Services.AddSingleton<Bulling>();
 DbClients d = new DbClients();
 builder.Services.AddSingleton<DbClients>(d);
+DbBulling b = new DbBulling();
+builder.Services.AddSingleton<DbBulling>(b);
 
 var app = builder.Build();
 
