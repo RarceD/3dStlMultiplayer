@@ -35,7 +35,7 @@ namespace SignalrProject.Controllers
         [HttpPost]
         public string AddMsg(WeddingMsgReceived input)
         {
-            _dbClient.AddMsg(input.Msg);
+            // _dbClient.AddMsg(input.Msg);
             return "ok";
         }
     }
