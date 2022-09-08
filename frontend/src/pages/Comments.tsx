@@ -58,7 +58,6 @@ function Comments() {
 
     return (
       players.map((p, index) =>
-        <>
           <ListItem alignItems="flex-start"
             key={p.msg + index}
           >
@@ -80,12 +79,11 @@ function Comments() {
               }
             />
           </ListItem>
-          <Divider variant="inset" component="li" />
-        </>
       )
     );
   }
 
+// <Divider variant="inset" component="li" />
 
   return (
     <>
@@ -98,7 +96,7 @@ function Comments() {
         style={{ minHeight: '80vh' }}
       >
         <Grid item xs={12} >
-          <img src={"images/book2.png"} height={60} style={{ marginTop: '40px' }} />
+          <img src={"/images/book2.png"} height={60} style={{ marginTop: '40px' }} />
         </Grid>
         <Grid item xs={12} >
           <Typography variant="h4" component="h2" align='center'>
@@ -106,7 +104,7 @@ function Comments() {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <img src={"images/book.png"} height={60} />
+          <img src={"/images/book.png"} height={60} />
         </Grid>
 
         <Grid item xs={12}>

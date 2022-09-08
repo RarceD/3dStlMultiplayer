@@ -14,7 +14,7 @@ import { CubeProps } from './interfaces/Cubes';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import Comments from './pages/Comments';
 import CommentsPublish from './pages/CommentsPublish';
-import { GameLoop, GameState } from './interfaces/GameLoop';
+import { GameLoop, GameState, Questions } from './interfaces/GameLoop';
 
 function App() {
   const [message, setMessage] = useState("initial value");
@@ -48,14 +48,41 @@ function App() {
 
   });
 
-  setTimeout(() => {
-    // console.log("send data");
-  }, 1000);
+  const [question, setQuestions] =  useState<Questions> (
+  {
+    Id: 1,
+    Answer: 2,
+    Responses: [
+      "Padel? yo solo quiero practicar un deporte de rica",
+      "Es más mala que Tomás Bretón en una barbacoa con la familia",
+      "Hay veces que juega bien contra los Martínez",
+      "María la facha se averguenza de ella"
+    ],
+    Text: "¿Cómo de buena es Ángela jugando al padel?"
+  });
+
+  let modifyStuff = () => {
+    let q : Questions=
+    {
+      Id: 1,
+      Answer: 2,
+      Responses: [
+       Math.random().toString()
+      ],
+      Text: "¿Cómo de buena es Ángela jugando al padel?"
+    };
+    setQuestions(q);
+    console.log("random ");
+  }
+
+  useEffect(()=>{
+    setInterval(function(){ modifyStuff() }, 2000);
+  }, [modifyStuff])
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/main" element={<Main />} />
+        <Route path="/main" element={<Main question={question} />} />
         <Route path="/noPulse" element={<NoPulse />} />
         <Route path="/comments" element={<Comments />} />
         <Route path="/comments/publish" element={<CommentsPublish />} />
