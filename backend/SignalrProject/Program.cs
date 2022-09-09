@@ -23,6 +23,9 @@ builder.Services.AddSingleton<DbClients>(d);
 DbBulling b = new DbBulling();
 builder.Services.AddSingleton<DbBulling>(b);
 
+SignalrHub signalrHub = new SignalrHub();
+builder.Services.AddSingleton<SignalrHub>(signalrHub);
+
 var app = builder.Build();
 
 

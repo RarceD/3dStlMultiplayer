@@ -1,6 +1,9 @@
 export interface GameLoop {
-    Questions: Questions,
-    State: GameState
+    id: number,
+    responses: string[],
+    text: string,
+    time?: number,
+    state: GameState
 }
 
 export enum GameState {
@@ -10,9 +13,7 @@ export enum GameState {
     End
 }
 
-export interface Questions {
-    Id: number,
-    Answer: number,
-    Responses: string[],
-    Text: string
+export const initState = (): GameLoop => {
+    let status: GameLoop = {id: 0, responses: [], text: "", time: 0, state: GameState.WaitingPlayers}
+    return status;
 }

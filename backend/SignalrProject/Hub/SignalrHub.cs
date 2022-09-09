@@ -4,9 +4,10 @@ using SignalrProject.Controllers.Dto;
 public class SignalrHub : Hub
 {
     private float _position;
-    private static readonly string LOCATION_ENDPOINT = "locationBackendSend";
-    private static readonly string GAME_STATUS_ENDPOINT = "gameStatusBackendSend";
-        
+    public static readonly string LOCATION_ENDPOINT = "locationBackendSend";
+    public static readonly string GAME_STATUS_ENDPOINT = "gameStatusBackendSend";
+    public static readonly string GAME_RESULTS_ENDPOINT = "playerResponsesBackendSend";
+
 
     public SignalrHub()
     {
@@ -29,8 +30,28 @@ public class SignalrHub : Hub
 
         // delete when finish:
         GameDto gameStatus = new GameDto();
-        gameStatus.State = 10;
+        var rand = new Random();
+        gameStatus.Time = new Random().Next();
+        gameStatus.State = new Random().Next();
+        gameStatus.Id = new Random().Next();
+        gameStatus.Text = "text" + gameStatus.Id.ToString() + gameStatus.Id.ToString();
+        gameStatus.Responses = new List<string>() { gameStatus.Text, "asd", "·$!", "asdfasdfasdf" };
         await Clients.All.SendAsync(GAME_STATUS_ENDPOINT, gameStatus);
+
+        ResultsDto results = new ResultsDto();
+        results.CorrectResponse = "Correct responses";
+        results.PlayersResults = new List<ResultsPlayerDto>();
+        for (int i = 0; i < 10; i++)
+        {
+            var a = new ResultsPlayerDto();
+            a.PlayerName = "Juan Carlos";
+            a.Success = true;
+            results.PlayersResults.Add(a);
+        }
+        await Clients.All.SendAsync(GAME_RESULTS_ENDPOINT, results);
+
+
+
         //_ = SendPosition(float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
     }
     public override async Task OnDisconnectedAsync(Exception? exception)

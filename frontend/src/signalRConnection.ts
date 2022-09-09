@@ -7,7 +7,8 @@ export default class Connector {
     public events: (
         onMessageReceived: (username: string, message: string) => void,
         onSomeOtherServerEventReceived: (payload: any) => void,
-        onGameStatusReceived: (payload: any) => void
+        onGameStatusReceived: (payload: any) => void,
+        onPlayerResponsesReveived: (payload: any) => void
     ) => void;
 
     static instance: Connector;
@@ -22,7 +23,7 @@ export default class Connector {
                 // onMessageReceived(username, message);
             // });
         // };
-        this.events = (onMessageReceived, onLocationReceived, onGameStatusReceived) => {
+        this.events = (onMessageReceived, onLocationReceived, onGameStatusReceived, onPlayerResponsesReceived) => {
             this.connection.on("messageReceived", (username, message) => {
                 // console.log("onMessageReceived");
                 onMessageReceived(username, message);
@@ -34,6 +35,11 @@ export default class Connector {
             this.connection.on("gameStatusBackendSend", (payload) => {
                 // console.log("gameStatusBackendSend", a, b, c);
                 onGameStatusReceived(payload);
+            });
+
+            this.connection.on("playerResponsesBackendSend", (payload) => {
+                // console.log("gameStatusBackendSend", a, b, c);
+                onPlayerResponsesReceived(payload);
             });
         };
 

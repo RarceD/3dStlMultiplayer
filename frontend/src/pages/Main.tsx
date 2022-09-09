@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import { GameState, Questions } from '../interfaces/GameLoop';
+import { GameLoop, GameState} from '../interfaces/GameLoop';
 import { useNavigate } from 'react-router-dom';
 import { URL_REQUEST } from '../util/util';
 import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Switch, Typography } from '@mui/material';
+import { Responses } from '../interfaces/Responses';
 
 interface Props {
-  question: Questions
+  gameData: GameLoop,
+  playerResponses: Responses
 }
 
 function Main(props: Props) {
@@ -33,8 +35,8 @@ function Main(props: Props) {
       });
   }
   useEffect(() => {
-    const interval = setInterval(() => GetGameStatus(), 1000);
-    return () => clearInterval(interval);
+    //const interval = setInterval(() => GetGameStatus(), 1000);
+    //return () => clearInterval(interval);
   }, [])
 
   const navigate = useNavigate();
@@ -43,9 +45,6 @@ function Main(props: Props) {
     console.log("change gameStatus", gameStatus, Number(GameState.OnGame));
     //setGameStatus(GameState.OnGame)
   }
-  console.log("yes", gameStatus);
-
-
 
   const [sendResponse, setSendResponse] = useState(false);
   const [color, setColor] = useState("#DFF6FF");
@@ -80,7 +79,7 @@ function Main(props: Props) {
         >
           <Grid item xs={3}>
             <Typography gutterBottom variant="h5" component="div" align={"center"}>
-              Time: {props.question.Answer}
+              Time: {props.gameData.time}
             </Typography>
           </Grid>
           <Grid item xs={3}>
@@ -93,11 +92,11 @@ function Main(props: Props) {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div" align={"center"}>
-                    {props.question.Text}
+                    {props.gameData.text}
                   </Typography>
                 </CardContent>
               </CardActionArea>
-              {arrayBtn(props.question.Responses)}
+              {arrayBtn(props.gameData.responses)}
             </Card>
           </Grid>
           <Grid item xs={3}>
@@ -108,6 +107,9 @@ function Main(props: Props) {
             > Enviar respuesta </Button>
           </Grid>
         </Grid>
+        <h1>
+          {props.playerResponses.correctResponse}
+        </h1>
 
       </div>
     </>

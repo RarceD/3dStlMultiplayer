@@ -14,11 +14,13 @@ import { CubeProps } from './interfaces/Cubes';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import Comments from './pages/Comments';
 import CommentsPublish from './pages/CommentsPublish';
-import { GameLoop, GameState, Questions } from './interfaces/GameLoop';
+import { GameLoop, GameState, initState } from './interfaces/GameLoop';
+import { initResponses, Responses } from './interfaces/Responses';
 
 function App() {
   const [message, setMessage] = useState("initial value");
-  const [gameStatus, setGameStatus] = useState<GameLoop>();
+  const [gameStatus, setGameStatus] = useState<GameLoop>(initState());
+  const [playerResponses, setPlayerReponses] = useState<Responses>(initResponses());
   const [spots, setSpots] = useState<CubeProps[]>([]);
 
   const { newMessage, events } = new Connector();
@@ -41,48 +43,39 @@ function App() {
       copyCubes.push(newCube)
       setSpots(copyCubes);
     }
-    const onGameStatusReceived = (a: any) => {
-      console.log("gameState:", a.state);
+    const onGameStatusReceived = (a: GameLoop) => {
+      let newGame: GameLoop = initState();
+      newGame.id = a.id;
+      newGame.responses = a.responses;
+      newGame.state = a.state;
+      newGame.text = a.text;
+      newGame.time = a.time;
+      setGameStatus(newGame);
+      console.log("gameState:", newGame);
     }
-    events(func1, onLocationReceived, onGameStatusReceived);
 
-  });
+    const onResponsesReceived = (a: Responses) => {
+      let newResponses: Responses = initResponses();
+      newResponses.correctResponse = a.correctResponse;
+      newResponses.playersResults = a.playersResults;
+      setPlayerReponses(newResponses);
+      console.log("playerResponses:", newResponses);
+    }
+    events(func1, onLocationReceived, onGameStatusReceived, onResponsesReceived);
 
-  const [question, setQuestions] =  useState<Questions> (
-  {
-    Id: 1,
-    Answer: 2,
-    Responses: [
-      "Padel? yo solo quiero practicar un deporte de rica",
-      "Es más mala que Tomás Bretón en una barbacoa con la familia",
-      "Hay veces que juega bien contra los Martínez",
-      "María la facha se averguenza de ella"
-    ],
-    Text: "¿Cómo de buena es Ángela jugando al padel?"
   });
 
   let modifyStuff = () => {
-    let q : Questions=
-    {
-      Id: 1,
-      Answer: 2,
-      Responses: [
-       Math.random().toString()
-      ],
-      Text: "¿Cómo de buena es Ángela jugando al padel?"
-    };
-    setQuestions(q);
-    console.log("random ");
   }
 
   useEffect(()=>{
-    setInterval(function(){ modifyStuff() }, 2000);
+    //setInterval(function(){ modifyStuff() }, 2000);
   }, [modifyStuff])
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/main" element={<Main question={question} />} />
+        <Route path="/main" element={<Main gameData={gameStatus} playerResponses={playerResponses}/>} />
         <Route path="/noPulse" element={<NoPulse />} />
         <Route path="/comments" element={<Comments />} />
         <Route path="/comments/publish" element={<CommentsPublish />} />
