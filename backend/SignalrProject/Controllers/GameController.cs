@@ -53,10 +53,13 @@ namespace SignalrProject.Controllers
         private void callbackTimer(object? state)
         {
             /*
-            GameDto gameLoop = new GameDto();
-            var msg = JsonSerializer.Serialize(gameLoop.ParseQuiz(_quiz));
-            _hubContext.Clients.All.SendAsync("messageReceived","test2", msg);
-            Console.WriteLine($"send{msg}");
+            GameDto gameStatus = new GameDto();
+            var rand = new Random();
+            gameStatus.State = rand.Next();
+            gameStatus.Id = rand.Next();
+            gameStatus.Text = "text" + gameStatus.Id.ToString() + gameStatus.Id.ToString();
+            gameStatus.Responses = new List<string>() { gameStatus.Text, "asd", "·$!", "asdfasdfasdf" };
+            _ = _hubContext.Clients.All.SendAsync(SignalrHub.GAME_STATUS_ENDPOINT, gameStatus);
             */
         }
     }

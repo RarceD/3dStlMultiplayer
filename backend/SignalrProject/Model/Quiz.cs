@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
+using SignalrProject.Controllers.Dto;
 
 namespace SignalrProject.Model
 {
@@ -8,10 +8,11 @@ namespace SignalrProject.Model
     {
         public Question[] Questions { get; set; }
         public List<Player> Players { get; set; }
+        public SignalrHub SignalrHub { get; }
 
         // Time at questions: 
         private static int _maxTimeAtResults = 5;
-        private static int _maxTimeAtQuestions = 10;
+        private static int _maxTimeAtQuestions = 5;
         private int _counterTime = _maxTimeAtQuestions;
 
         // Timers to control it:
@@ -26,16 +27,19 @@ namespace SignalrProject.Model
         }
         public GameStatusCodes GameStatus = GameStatusCodes.WaitingPlayers;
 
-        public Quiz()
+        public Quiz(SignalrHub signalrHub)
         {
             Questions = LoadJsonQuestions("Questions/questions_real.json");
             if (Questions.Length > 0)
                 Questions.ElementAt(0).Active = true;
             Players = new List<Player>();
             _timerRepeatTask = new Timer(callbackTimer, _autoEvent, 2000, 1000);
+            SignalrHub = signalrHub;
         }
+
         private void callbackTimer(object? state)
         {
+            Console.WriteLine("timer");
             switch (GameStatus)
             {
                 case GameStatusCodes.WaitingPlayers:
@@ -86,6 +90,8 @@ namespace SignalrProject.Model
                     Questions.ElementAt(index + 1).Active = true;
                     GameStatus = GameStatusCodes.Results;
                     _counterTime = _maxTimeAtResults;
+                    SendNewQuestion(index);
+
                 }
                 else
                 {
@@ -103,6 +109,16 @@ namespace SignalrProject.Model
         public bool RemovePlayer(int id)
         {
             return false;
+        }
+        private void SendNewQuestion(int index)
+        {
+            GameDto gameStatus = new GameDto();
+            gameStatus.State = 1; //(int)GameStatus+1;
+            gameStatus.Id = Questions[index].Id;
+            gameStatus.Text = Questions[index].Text;
+            gameStatus.Responses = new List<string>();
+            gameStatus.Responses = Questions[index].Responses;
+            _ = SignalrHub.Clients.All.SendAsync(SignalrHub.GAME_STATUS_ENDPOINT, gameStatus);
         }
 
         public bool AddQuizResponse(int playerId, int questionId, int response)
