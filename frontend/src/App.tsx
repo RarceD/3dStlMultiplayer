@@ -80,7 +80,7 @@ function App() {
         <Route path="/comments" element={<Comments />} />
         <Route path="/comments/publish" element={<CommentsPublish />} />
         <Route path="/privacity" element={<Privacity />} />
-        <Route path="/waiting" element={<Waiting />} />
+        <Route path="/waiting" element={<Waiting gameData={gameStatus}  />} />
         <Route path="/config" element={<Config />} />
         <Route path="/*" element={<Login />} />
         <Route path="/wedding" element={<Wedding />} />

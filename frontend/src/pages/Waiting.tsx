@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
- 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -10,12 +8,15 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Player } from '../interfaces/Players';
 import { URL_REQUEST } from '../util/util';
-import { GameState } from '../interfaces/GameLoop';
+import { GameLoop } from '../interfaces/GameLoop';
 import { useNavigate } from 'react-router-dom';
+import { Grid } from '@mui/material';
 
-const Waiting = () => {
+interface Props {
+  gameData: GameLoop
+}
+const Waiting = (props: Props) => {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [gameStatus, setGameStatus] = useState<number>(0);
 
   const CheckUsers = () => {
     const requestOptions = {
@@ -38,33 +39,10 @@ const Waiting = () => {
         }
       });
   }
-  const GetGameStatus = () => {
-    const requestOptions = {
-      method: 'GET',
-      mode: "cors" as RequestMode,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    };
-    fetch(URL_REQUEST + "game/status", requestOptions)
-      .then(response => response.json())
-      .catch(error => console.error('Error:', error))
-      .then(response => {
-        // console.log("status", response);
-        if (response !== gameStatus) {
-          console.log("status change")
-          setGameStatus(response);
-        }
-
-      });
-  }
   useEffect(() => {
-    const intervalUser = setInterval(() => CheckUsers(), 2000);
-    const intervalStatus = setInterval(() => GetGameStatus(), 1000);
+    const intervalUser = setInterval(() => CheckUsers(), 4000);
     return () => {
       clearInterval(intervalUser);
-      clearInterval(intervalStatus);
     }
   }, [])
 
@@ -100,20 +78,42 @@ const Waiting = () => {
     );
   }
   const navigate = useNavigate();
-  if (gameStatus === Number(GameState.OnGame)) {
+  if (1 === Number(props.gameData.state)) {
+    console.log("waiting page: ", props.gameData.state)
     navigate("/main")
   }
 
   return (
     <>
-      <Typography alignContent={"center"}> El ChochoPowerGame empezará en unos minutos</Typography>
-      <iframe src="http://giphy.com/embed/LiWsL77P4tA9a" width="400" height="300" frameBorder="0" allowFullScreen></iframe>
-      <div className="App">
-        Lista de gente:
-      </div>
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {ShowPlayersWaiting(players)}
-      </List>
+
+      <Grid
+        container
+        spacing={1}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Grid item xs={12}>
+          <Typography gutterBottom variant="h6" component="div" align={"center"}>
+            El ChochoPowerGame empezará en unos minutos
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <iframe src="http://giphy.com/embed/LiWsL77P4tA9a" title="waitingProps" width="400" height="300" frameBorder="0" allowFullScreen></iframe>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography gutterBottom variant="h6" align={"center"}>
+            Lista de gente:
+          </Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+            {ShowPlayersWaiting(players)}
+          </List>
+        </Grid>
+      </Grid>
     </>
   );
 }

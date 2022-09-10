@@ -4,7 +4,7 @@ export interface Responses {
 }
 
 export interface PlayerResponses {
-    name: string,
+    playerName: string,
     success: boolean
 }
 
