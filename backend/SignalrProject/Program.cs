@@ -15,8 +15,6 @@ builder.Services.AddSignalR();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-// Quiz data:
-builder.Services.AddSingleton<Quiz>();
 builder.Services.AddSingleton<Bulling>();
 DbClients d = new DbClients();
 builder.Services.AddSingleton<DbClients>(d);
@@ -25,6 +23,9 @@ builder.Services.AddSingleton<DbBulling>(b);
 
 SignalrHub signalrHub = new SignalrHub();
 builder.Services.AddSingleton<SignalrHub>(signalrHub);
+// Quiz data:
+var q = new Quiz(signalrHub);
+builder.Services.AddSingleton<Quiz>(q);
 
 var app = builder.Build();
 

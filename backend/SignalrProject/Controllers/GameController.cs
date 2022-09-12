@@ -40,7 +40,7 @@ namespace SignalrProject.Controllers
             {
                 _quiz.GameStatus = Quiz.GameStatusCodes.OnGame;
             }
-            _ = _hubContext.Clients.All.SendAsync("ReceivedMsg", 123, 23);
+            //_ = _hubContext.Clients.All.SendAsync("ReceivedMsg", 123, 23);
             return "ok";
         }
 

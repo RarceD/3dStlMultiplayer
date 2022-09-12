@@ -32,7 +32,7 @@ public class SignalrHub : Hub
         GameDto gameStatus = new GameDto();
         var rand = new Random();
         gameStatus.Time = new Random().Next();
-        gameStatus.State = new Random().Next();
+        gameStatus.State = 1;
         gameStatus.Id = new Random().Next();
         gameStatus.Text = "text" + gameStatus.Id.ToString() + gameStatus.Id.ToString();
         gameStatus.Responses = new List<string>() { gameStatus.Text, "asd", "·$!", "asdfasdfasdf" };
