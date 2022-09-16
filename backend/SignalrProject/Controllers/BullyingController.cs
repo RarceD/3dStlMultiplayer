@@ -15,7 +15,7 @@ namespace SignalrProject.Controllers
     {
         private DbBulling _dbBulling;
 
-        private List<string> _fantasticWords;
+        private Dictionary<string, int> _fantasticWords;
         public BullingController(DbBulling dbClient)
         {
             _dbBulling = dbClient;
@@ -40,26 +40,42 @@ namespace SignalrProject.Controllers
         #endregion
 
         [HttpPost]
-        public string AddMsg(WeddingMsgReceived input)
+        public BullingResponseDto AddMsg(WeddingMsgReceived input)
         {
-            if (input.Msg == "") return "false";
-
-            string result = IsSuccessfullMsg(input);
-            if (result == String.Empty)
-                result = "ok";
+            var result = IsSuccessfullMsg(input);
+            // Not storing in db void msg:
+            if (input.Msg == "") return result;
             _dbBulling.AddMsg(input.Msg);
             return result;
         }
 
-        private string? IsSuccessfullMsg(WeddingMsgReceived input)
+        private BullingResponseDto IsSuccessfullMsg(WeddingMsgReceived input)
         {
+            var r = new BullingResponseDto();
             var slutStr = input.Msg.ToString().ToLower();
-            foreach (string? w in _fantasticWords)
+            foreach (var w in _fantasticWords)
             {
-                if (slutStr.Contains(w.ToLower()))
-                    return w;
+                if (slutStr.Contains(w.Key.ToLower()))
+                {
+                    r.SuccessWord = w.Key;
+                    if (w.Value < 10)
+                    {
+                        r.ResponseType = BullingResponseDto.Reward.GUMMY;
+                    }
+                    else if (w.Value <= 14)
+                    {
+                        r.ResponseType = BullingResponseDto.Reward.SHOT;
+                    }
+                    else
+                    {
+                        r.ResponseType = BullingResponseDto.Reward.TWO_SHOTS;
+                    }
+                    return r;
+                }
             }
-            return String.Empty;
+            r.SuccessWord = "";
+            r.ResponseType = BullingResponseDto.Reward.NO_REWARD;
+            return r;
         }
 
 

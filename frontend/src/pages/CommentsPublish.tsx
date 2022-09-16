@@ -29,12 +29,21 @@ const CommentsPublish = () => {
         let s: string = " ";
         setMsg(s);
         console.log(response)
-        switch (response) {
-          case "ok":
+        switch (+response['responseType']) {
+          case 0:
             setResponseBack("Publicación correcta");
             break
+          case 1:
+            setResponseBack("HAS GANADO UNA PUTA GOMINOLA con: " + response['successWord']);
+            break
+          case 2:
+            setResponseBack("HAS GANADO UN CHUPITO con: " + response['successWord']);
+            break
+          case 3:
+            setResponseBack("DOS CHUPITOS POR AQUÍ: " + response['successWord']);
+            break
           default:
-            setResponseBack("HAS GANADO GOMINOLA:" + response)
+            setResponseBack("Me has tirado el servidor hijo de puta");
             break;
         }
         //navigate("/comments")
