@@ -28,6 +28,7 @@ public class SignalrHub : Hub
         // Return back to all users the locations:
         await Clients.All.SendAsync(LOCATION_ENDPOINT, message);
 
+        /*
         // delete when finish:
         GameDto gameStatus = new GameDto();
         var rand = new Random();
@@ -49,6 +50,7 @@ public class SignalrHub : Hub
             results.PlayersResults.Add(a);
         }
         await Clients.All.SendAsync(GAME_RESULTS_ENDPOINT, results);
+        */
 
 
 

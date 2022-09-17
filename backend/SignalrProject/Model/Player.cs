@@ -6,14 +6,14 @@
         public string Name { get; set; }
 
         public string Position { get; set; }
-        public int SuccessResponses { get; set; }
+        public List<QuestionResponse> Responses { get; set; }
 
         public Player(int id, string name, string position)
         {
             Id = id;
             Name = name;
             Position = position;
-            SuccessResponses = 0;
+            Responses = new List<QuestionResponse>();
         }
     }
 }

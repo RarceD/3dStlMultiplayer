@@ -29,12 +29,17 @@ namespace SignalrProject.Model
 
         public Quiz(SignalrHub signalrHub)
         {
-            Questions = LoadJsonQuestions("Questions/questions_real.json");
-            if (Questions.Length > 0)
-                Questions.ElementAt(0).Active = true;
+            LoadQuestionsFromFile();
             Players = new List<Player>();
             _timerRepeatTask = new Timer(callbackTimer, _autoEvent, 2000, 1000);
             SignalrHub = signalrHub;
+        }
+        private void LoadQuestionsFromFile()
+        {
+            Questions = LoadJsonQuestions("Questions/questions_real.json");
+            //Questions = LoadJsonQuestions("Questions/questions.json");
+            if (Questions.Length > 0)
+                Questions.ElementAt(0).Active = true;
         }
 
         private void callbackTimer(object? state)
@@ -68,8 +73,11 @@ namespace SignalrProject.Model
 
             if (_counterTime-- <= 0)
             {
-                GameStatus = GameStatusCodes.OnGame;
-                _counterTime = _maxTimeAtQuestions;
+                // GameStatus = GameStatusCodes.OnGame;
+                //_counterTime = _maxTimeAtQuestions;
+                //GameStatus = GameStatusCodes.OnGame;
+                //SendResults();
+                SendNewQuestion(0, 0);
             }
         }
         private void HandleEnd()
@@ -78,6 +86,9 @@ namespace SignalrProject.Model
         }
         private void HandleOnGame()
         {
+
+            int active = Questions.ToList().FindIndex(a => a.Active == true);
+            SendNewQuestion(active, _counterTime);
             if (_counterTime-- <= 0)
             {
                 Console.WriteLine("restart timer");
@@ -86,16 +97,27 @@ namespace SignalrProject.Model
                 int index = Questions.ToList().FindIndex(a => a.Active == true);
                 if (index <= Questions.Length - 2)
                 {
+                    //GameStatus = GameStatusCodes.Results;
+                    //SendResults(index);
                     Questions.ElementAt(index).Active = false;
                     Questions.ElementAt(index + 1).Active = true;
-                    GameStatus = GameStatusCodes.Results;
+                    SendNewQuestion(index, _counterTime);
                     _counterTime = _maxTimeAtResults;
-                    SendNewQuestion(index);
+                    // SendNewQuestion(index, _counterTime);
 
                 }
                 else
                 {
-                    GameStatus = GameStatusCodes.End;
+                    // Vamos al estado de visualizar resultados:
+                    GameStatus = GameStatusCodes.Results;
+                    SendNewQuestion(index, _counterTime);
+                    _counterTime = _maxTimeAtResults;
+                    // LoadQuestionsFromFile();
+                    // GameStatus = GameStatusCodes.End;
+                    //foreach (var item in Questions)
+                    //item.Active = false;
+                    // Restart the game
+                    //Questions[0].Active = true;
                 }
             }
         }
@@ -110,26 +132,57 @@ namespace SignalrProject.Model
         {
             return false;
         }
-        private void SendNewQuestion(int index)
+        private void SendNewQuestion(int index, int time)
         {
             GameDto gameStatus = new GameDto();
-            gameStatus.State = 1; //(int)GameStatus+1;
+            gameStatus.State = (int)GameStatus;
             gameStatus.Id = Questions[index].Id;
+            gameStatus.Time = time;
             gameStatus.Text = Questions[index].Text;
             gameStatus.Responses = new List<string>();
             gameStatus.Responses = Questions[index].Responses;
             _ = SignalrHub.Clients.All.SendAsync(SignalrHub.GAME_STATUS_ENDPOINT, gameStatus);
         }
-
-        public bool AddQuizResponse(int playerId, int questionId, int response)
+        private void SendResults()
         {
-            foreach (Player play in Players.Where(p => p.Id == playerId))
+            /*
+            ResultsDto results = new ResultsDto();
+            results.CorrectResponse = " nop ";// Questions[index].Text;
+            results.PlayersResults = new List<ResultsPlayerDto>();
+
+            foreach (var r in Players)
             {
-                foreach (var q in Questions.Where(qu => qu.Id == questionId && response == qu.Answer))
+                var a = new ResultsPlayerDto();
+                a.PlayerName = r.Name;
+                a.Success = r.SuccessResponses > 0 ? true : false;
+                results.PlayersResults.Add(a);
+            }
+
+            for (var i = 0; i < 11; i++)
+            {
+                var a = new ResultsPlayerDto();
+                a.PlayerName = "test";
+                a.Success = false;
+                results.PlayersResults.Add(a);
+            }
+
+            _ = SignalrHub.Clients.All.SendAsync(SignalrHub.GAME_STATUS_ENDPOINT, results);
+            */
+        }
+
+        public bool AddQuizResponse(QuestionResponse resp)
+        {
+            foreach (Player play in Players.Where(p => p.Id == resp.Id))
+            {
+                if (!play.Responses.Where(i => i.QuestionId == resp.QuestionId).Any())
+                    play.Responses.Add(resp);
+                /*
+                foreach (var q in Questions.Where(qu => qu.Id == resp.QuestionId && qu.Answer == resp.Response))
                 {
                     play.SuccessResponses++;
                     return true;
                 }
+                */
             }
             return false;
         }
@@ -149,6 +202,50 @@ namespace SignalrProject.Model
                 return q;
             }
 
+        }
+        public void RestartGame()
+        {
+            GameStatus = GameStatusCodes.OnGame;
+            foreach (var q in Questions)
+            {
+                q.Active = false;
+            }
+            Questions[0].Active = true;
+        }
+        public List<ResultsDto> GetResults()
+        {
+            List<ResultsDto> results = new List<ResultsDto>();
+            foreach (var q in Questions)
+            {
+                try
+                {
+                    var r = new ResultsDto();
+                    r.Question = q.Text;
+                    int index = q.Answer;
+                    r.Response = index <= 3 ? q.Responses[index] : "Error";
+                    r.PlayersResults = Players;
+                    r.NumberSuccessResponses = 0;
+                    foreach (var p in Players)
+                    {
+                        foreach(var re in p.Responses)
+                        {
+                            if (re.QuestionId == q.Id)
+                            {
+                                if (re.Response == q.Answer)
+                                {
+                                    r.NumberSuccessResponses++;
+                                }
+                            }
+                        }
+                    }
+                    results.Add(r);
+                }
+                catch (Exception e)
+                {
+                    return results;
+                }
+            }
+            return results;
         }
     }
 }

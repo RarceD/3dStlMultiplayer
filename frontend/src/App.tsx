@@ -50,27 +50,30 @@ function App() {
       newGame.state = a.state;
       newGame.text = a.text;
       newGame.time = a.time;
-      setGameStatus(newGame);
-      console.log("gameState:", newGame);
+      if (newGame !== undefined)
+      {
+        setGameStatus(newGame);
+        //console.log("on gameState:", newGame);
+      }
     }
 
     const onResponsesReceived = (a: Responses) => {
       let newResponses: Responses = initResponses();
-      newResponses.correctResponse = a.correctResponse;
-      newResponses.playersResults = a.playersResults;
-      setPlayerReponses(newResponses);
-      console.log("playerResponses:", newResponses);
+      //newResponses.correctResponse = a.correctResponse;
+      //newResponses.playersResults = a.playersResults;
+      if (newResponses !== undefined)
+      {
+        //setPlayerReponses(newResponses);
+        //console.log("on resp playerResponses:", newResponses);
+      }
     }
     events(func1, onLocationReceived, onGameStatusReceived, onResponsesReceived);
 
   });
 
-  let modifyStuff = () => {
-  }
-
   useEffect(()=>{
     //setInterval(function(){ modifyStuff() }, 2000);
-  }, [modifyStuff])
+  }, [])
 
   return (
     <BrowserRouter>
@@ -88,7 +91,7 @@ function App() {
         <Route path="/3d" element={
           <ThreeD
             sendWsMsg={(msg: string) => {
-              console.log("App.tsx", msg);
+              // console.log("App.tsx", msg);
               newMessage(msg);
             }}
             spots={spots}

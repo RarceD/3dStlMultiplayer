@@ -33,7 +33,7 @@ namespace SignalrProject.Model
                 var msgs = JsonSerializer.Deserialize<string[]>(jsonString)!.ToList();
                 return msgs;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("There is no file, gilipollas");
                 return new List<string>();
