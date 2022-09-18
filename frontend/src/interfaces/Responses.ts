@@ -1,6 +1,6 @@
 export interface Responses {
-    playersResults: PlayerResponses[],
-    correctResponse: string
+    question: string,
+    response: string
 }
 
 export interface PlayerResponses {
@@ -10,6 +10,6 @@ export interface PlayerResponses {
 
 
 export const initResponses = (): Responses => {
-    const r: Responses = {correctResponse: "", playersResults: []}
+    const r: Responses = {question: "", response: ""}
     return r;
 }

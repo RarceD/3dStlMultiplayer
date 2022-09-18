@@ -3,6 +3,7 @@ import logo from './logo.svg';
  
 import { Button } from '@mui/material';
 import { URL_REQUEST } from '../util/util';
+import { GameState } from '../interfaces/GameLoop';
 const Config = () => {
   const clearPlayers = () => {
     const requestOptions = {
@@ -21,7 +22,7 @@ const Config = () => {
       });
   }
 
-  const startGame = () => {
+  const startGame = (state: number) => {
     const requestOptions = {
       method: 'GET',
       mode: "cors" as RequestMode,
@@ -30,7 +31,7 @@ const Config = () => {
         'Content-Type': 'application/json'
       }
     };
-    fetch(URL_REQUEST + "game", requestOptions)
+    fetch(URL_REQUEST + "game?state=" + state, requestOptions)
       .then(response => response.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
@@ -49,13 +50,23 @@ const Config = () => {
         clearPlayer ()
       </Button>
       <h1>
-        Logs:
+        SHOW GAME ON:
       </h1>
       <Button
-        onClick={startGame}
+        onClick={() => startGame(0)}
         variant="contained"
       >
-        startGame ()
+        startGame 
+      </Button>
+
+      <h1>
+        SHOW RESPONSES:
+      </h1>
+      <Button
+        onClick={() => startGame(1)}
+        variant="contained"
+      >
+        startresponses
       </Button>
     </div>
   );

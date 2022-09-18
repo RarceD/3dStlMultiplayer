@@ -9,7 +9,7 @@ import { Responses } from '../interfaces/Responses';
 import { Grid } from '@mui/material';
 
 interface Props {
-  playerResponses: Responses
+  playerResponses: Responses[]
 }
 const Results = (props: Props) => {
 
@@ -32,23 +32,25 @@ const Results = (props: Props) => {
           <iframe src="http://giphy.com/embed/aWRWTF27ilPzy" title="resUnique" width="280" height="159" frameBorder="0" ></iframe>
         </Grid>
         <Grid item xs={12}>
-          <Typography gutterBottom variant="h6" align={"center"}>
-            {props.playerResponses.correctResponse}
-          </Typography>
         </Grid>
 
         <Grid item xs={12}>
           <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {props.playerResponses.playersResults.map((p, index) =>
+
+            {props.playerResponses.map((p, index) =>
               <>
+          <Typography gutterBottom variant="h6" align={"center"}>
+            {p.question}
+          </Typography>
                 <ListItem alignItems="flex-start"
-                  key={p.playerName + index}
+                  key={p.response + index}
                 >
+
                   <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src={p.success ? "/images/win.png" : "/images/lost.png"} />
+                    <Avatar alt="Remy Sharp" src={true ? "/images/win.png" : "/images/lost.png"} />
                   </ListItemAvatar>
                   <ListItemText
-                    primary= {p.playerName}
+                    primary= {p.response}
                     secondary={
                       <React.Fragment>
                         <Typography
@@ -57,7 +59,7 @@ const Results = (props: Props) => {
                           variant="body2"
                           color="text.primary"
                         >
-                          asd
+                          Aciertos: 
                         </Typography>
                       </React.Fragment>
                     }

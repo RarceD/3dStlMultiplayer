@@ -25,6 +25,7 @@ export const Login = () => {
 
     const handleSubmit = () => {
         let data = { Name: user, Position: pass }
+        if (user === "" || pass === "") return;
         const to_send = JSON.stringify(data)
         const requestOptions = {
             method: 'POST',
@@ -40,8 +41,12 @@ export const Login = () => {
             .then(response => response.json())
             .catch(error => console.error('Error:', error))
             .then(response => {
-                // console.log(response);
-                navigate('/waiting');
+                console.log(response);
+                localStorage.setItem("id", response.id);
+                localStorage.setItem("name", user);
+                localStorage.setItem("position", pass);
+                localStorage.setItem("question", "0");
+                navigate('/3d');
             });
     }
 
@@ -106,11 +111,11 @@ export const Login = () => {
                                     Aceptar politica de privacidad
                                 </Link>
                             </Grid>
-                            <Grid item>
+{/*                             <Grid item>
                                 <Link variant="body2" href="comments">
                                     Añadir comentarios
                                 </Link>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Box>
                 </Box>

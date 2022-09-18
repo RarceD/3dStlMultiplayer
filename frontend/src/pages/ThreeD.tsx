@@ -64,16 +64,16 @@ const ThreeD = (props: PropsThree) => {
     })
 
     // Load options:
-    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+    stlLoader.load("/Models/monkey.stl", geo => {
       setOptionA(geo)
     })
-    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+    stlLoader.load("/Models/cat.stl", geo => {
       setOptionB(geo)
     })
     stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
       setOptionC(geo)
     })
-    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+    stlLoader.load("/Models/hippo.stl", geo => {
       setOptionD(geo)
     })
 
@@ -85,15 +85,6 @@ const ThreeD = (props: PropsThree) => {
       , 1000);
   }, [setPulses])
 
-
-  const makeMagic = () => {
-
-    console.log("magic change");
-    // const stlLoader = new STLLoader()
-    // stlLoader.load("/Models/CuteUnicorn.stl", geo => {
-    // setGeometry(geo)
-    // })
-  }
 
   const addToUnicorn = (e: any) => {
     console.log("pulses", pulses);
@@ -119,30 +110,21 @@ const ThreeD = (props: PropsThree) => {
   }
   return (
     <>
-      <h3> {ALLQUESTIONS[Number(q)].Text}</h3>
-      <Button
-        onClick={() => {
-          let newPage: number = Number(q) + 1;
-          navigate('/3d?q=' + newPage.toString());
-          props.addOwnCube(null);
-        }}
-      >
-        next
-      </Button>
+      <h5> {ALLQUESTIONS[Number(q)].Text}</h5>
       <div style={{ width: "100vw", height: "100vh" }}>
 
         <Canvas>
           <OrbitControls />
-          <ambientLight intensity={0.8} />
+          <ambientLight  intensity={0.8} />
           <Stars count={99990} />
-          <spotLight
+           <spotLight
             angle={0.3}
             position={[10, 15, 10]}
           />
           <spotLight
             angle={0.3}
             position={[-10, 15, 10]}
-          />
+          /> 
           {/*         
         <Box
           addCubes={(x: number, y: number, z: number) => {
@@ -181,22 +163,26 @@ const ThreeD = (props: PropsThree) => {
         </mesh> */}
 
           <mesh geometry={optionA}
-            position={[-1, -2, 2]}
-            scale={[0.2, 0.2, 0.2]}
+            position={[-1, -2.5, 0]}
+            scale={[0.04, 0.04, 0.04]}
             rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
+            metalness={0.55}
+            roughness={0.29}
               color="#ff0000" />
           </mesh>
           <mesh geometry={optionB}
-            position={[1, 1, 2]}
-            scale={[0.2, 0.2, 0.2]}
+            position={[-1.5, 1, 2]}
+            scale={[0.02, 0.02, 0.02]}
             rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-              color="#00ff00" />
+            metalness={0.35}
+            roughness={0.29}
+              color="#06911f" />
           </mesh>
           <mesh geometry={optionC}
             position={[1, -2, 2]}
@@ -205,16 +191,25 @@ const ThreeD = (props: PropsThree) => {
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-              color="#0000ff" />
+            metalness={0.45}
+            roughness={0.39}
+            emissive={"#0000ff"}
+            emissiveIntensity={0.9}
+              color="#ff2be6"
+               />
           </mesh>
+
           <mesh geometry={optionD}
-            position={[-1, 1, 2]}
-            scale={[0.2, 0.2, 0.2]}
-            rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
+            position={[-1, 1, -1]}
+            scale={[0.05, 0.05, 0.05]}
+            rotation={[-1 / 2 * Math.PI, 0/2 * Math.PI, 1/2*Math.PI ]}
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-              color="#00ffff" />
+            metalness={0.35}
+            roughness={0.39}
+            //emissive="#ffffff"
+              color="#6669ff" />
           </mesh>
 
 
@@ -225,7 +220,7 @@ const ThreeD = (props: PropsThree) => {
                 key={index}
                 position={[key.x, key.y, key.z]}
                 rotation={[0, 3, 2]}
-                scale={[0.1, 0.1, 0.1]}
+                scale={[0.05, 0.05, 0.05]}
               >
                 <boxBufferGeometry
                   attach="geometry"
