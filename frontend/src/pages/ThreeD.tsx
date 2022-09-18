@@ -10,6 +10,9 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import Connector from '../signalRConnection';
 import { CubeProps } from '../interfaces/Cubes';
+import { StopScreenShare } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { ALLQUESTIONS } from '../interfaces/Questions';
 
 interface Props {
   addCubes: any,
@@ -38,12 +41,21 @@ const Box = (props: Props) => {
 
 interface PropsThree {
   sendWsMsg: (msg: string) => void,
-  spots: CubeProps[]
+  spots: CubeProps[],
+  addOwnCube: (msg: any) => void,
+  clear: boolean
 }
 const ThreeD = (props: PropsThree) => {
-  const [periodicUpdate, setPediodicUpdate] = useState<boolean>(true)
   const [geometry, setGeometry] = useState<BufferGeometry>()
-  const [arrayCubes, setArrayCubes] = useState<CubeProps[]>([])
+  const [optionA, setOptionA] = useState<BufferGeometry>()
+  const [optionB, setOptionB] = useState<BufferGeometry>()
+  const [optionC, setOptionC] = useState<BufferGeometry>()
+  const [optionD, setOptionD] = useState<BufferGeometry>()
+  const navigate = useNavigate();
+
+  // Añado pulsos hasta un máximo de X por pregunta:
+  const maxPulses = 10;
+  const [pulses, setPulses] = useState(0);
 
   useEffect(() => {
     const stlLoader = new STLLoader()
@@ -51,19 +63,31 @@ const ThreeD = (props: PropsThree) => {
       setGeometry(geo)
     })
 
+    // Load options:
+    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+      setOptionA(geo)
+    })
+    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+      setOptionB(geo)
+    })
+    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+      setOptionC(geo)
+    })
+    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+      setOptionD(geo)
+    })
+
     //setTimeout(makeMagic.bind(this), 5000);
     setInterval(() => {
-      let a: CubeProps[] = [];
-      for (let x of arrayCubes)
-        a.push(x);
-      setArrayCubes(a);
+      let n = Math.random();
+      setPulses(n);
     }
-      , 5000);
-  }, [setArrayCubes])
+      , 1000);
+  }, [setPulses])
+
 
   const makeMagic = () => {
-    let a = arrayCubes;
-    setArrayCubes(a);
+
     console.log("magic change");
     // const stlLoader = new STLLoader()
     // stlLoader.load("/Models/CuteUnicorn.stl", geo => {
@@ -72,34 +96,54 @@ const ThreeD = (props: PropsThree) => {
   }
 
   const addToUnicorn = (e: any) => {
-    // console.log(e);
-    var p = e.point;
+    console.log("pulses", pulses);
+
+    const p = e.point;
     const cube: CubeProps = {
       x: p.x, y: p.y, z: p.z
     }
-    let cc: CubeProps[] = [];
-    for (let c of arrayCubes)
-      cc.push(c)
-    cc.push(cube)
-    setArrayCubes(cc);
-    let msg: string = cube.x.toString() + ";" + cube.y.toString() + ";" + cube.z.toString();
+    props.addOwnCube(cube);
+
+    let msg: string = cube.x.toString() + ";" + cube.y.toString() + ";" + cube.z.toString() + ";0";
+
+
+    let pp = pulses + 1;
     props.sendWsMsg(msg);
+    setPulses(pp);
+
+  }
+  let q: number = 0;
+  let qq = localStorage.getItem('question');
+  if (qq !== null) {
+    q = +qq;
   }
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <>
+      <h3> {ALLQUESTIONS[Number(q)].Text}</h3>
+      <Button
+        onClick={() => {
+          let newPage: number = Number(q) + 1;
+          navigate('/3d?q=' + newPage.toString());
+          props.addOwnCube(null);
+        }}
+      >
+        next
+      </Button>
+      <div style={{ width: "100vw", height: "100vh" }}>
 
-      <Canvas>
-        <OrbitControls />
-        <ambientLight intensity={0.8} />
-        <Stars count={99990} />
-        <spotLight
-          angle={0.3}
-          position={[10, 15, 10]}
-        />
-        <spotLight
-          angle={0.3}
-          position={[-10, 15, 10]}
-        />
+        <Canvas>
+          <OrbitControls />
+          <ambientLight intensity={0.8} />
+          <Stars count={99990} />
+          <spotLight
+            angle={0.3}
+            position={[10, 15, 10]}
+          />
+          <spotLight
+            angle={0.3}
+            position={[-10, 15, 10]}
+          />
+          {/*         
         <Box
           addCubes={(x: number, y: number, z: number) => {
             console.log("test")
@@ -120,10 +164,11 @@ const ThreeD = (props: PropsThree) => {
           }}
           removeCubes={() => {
 
-          }} />
+          }} /> */}
 
 
-        <mesh geometry={geometry}
+          {/* 
+                <mesh geometry={geometry}
           //scale={[0.04, 0.04, 0.04]}
           // position={[0, -1, -1]}
           position={[0, 0, 2]}
@@ -133,44 +178,67 @@ const ThreeD = (props: PropsThree) => {
         >
           <meshStandardMaterial
             color="#cc0000" />
-        </mesh>
+        </mesh> */}
 
-        {
-          arrayCubes.map((key, index) => {
-            return <mesh
-              key={index}
-              position={[key.x, key.y, key.z]}
-              rotation={[0, 3, 2]}
-              scale={[0.1, 0.1, 0.1]}
-            >
-              <boxBufferGeometry
-                attach="geometry"
-              />
-              <meshStandardMaterial color="#000000" />
-            </mesh>;
+          <mesh geometry={optionA}
+            position={[-1, -2, 2]}
+            scale={[0.2, 0.2, 0.2]}
+            rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
+            onPointerUp={(e) => addToUnicorn(e)}
+          >
+            <meshStandardMaterial
+              color="#ff0000" />
+          </mesh>
+          <mesh geometry={optionB}
+            position={[1, 1, 2]}
+            scale={[0.2, 0.2, 0.2]}
+            rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
+            onPointerUp={(e) => addToUnicorn(e)}
+          >
+            <meshStandardMaterial
+              color="#00ff00" />
+          </mesh>
+          <mesh geometry={optionC}
+            position={[1, -2, 2]}
+            scale={[0.2, 0.2, 0.2]}
+            rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
+            onPointerUp={(e) => addToUnicorn(e)}
+          >
+            <meshStandardMaterial
+              color="#0000ff" />
+          </mesh>
+          <mesh geometry={optionD}
+            position={[-1, 1, 2]}
+            scale={[0.2, 0.2, 0.2]}
+            rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
+            onPointerUp={(e) => addToUnicorn(e)}
+          >
+            <meshStandardMaterial
+              color="#00ffff" />
+          </mesh>
+
+
+
+          {
+            props.spots.map((key, index) => {
+              return <mesh
+                key={index}
+                position={[key.x, key.y, key.z]}
+                rotation={[0, 3, 2]}
+                scale={[0.1, 0.1, 0.1]}
+              >
+                <boxBufferGeometry
+                  attach="geometry"
+                />
+                <meshStandardMaterial color="#0f0f0f" />
+              </mesh>;
+            }
+            )
           }
-          )
-        }
 
-        {
-          props.spots.map((key, index) => {
-            return <mesh
-              key={index}
-              position={[key.x, key.y, key.z]}
-              rotation={[0, 3, 2]}
-              scale={[0.1, 0.1, 0.1]}
-            >
-              <boxBufferGeometry
-                attach="geometry"
-              />
-              <meshStandardMaterial color="#0f0f0f" />
-            </mesh>;
-          }
-          )
-        }
-
-      </Canvas>
-    </div>
+        </Canvas>
+      </div>
+    </>
   );
 }
 export default ThreeD;
