@@ -51,18 +51,16 @@ const ThreeD = (props: PropsThree) => {
   const [optionB, setOptionB] = useState<BufferGeometry>()
   const [optionC, setOptionC] = useState<BufferGeometry>()
   const [optionD, setOptionD] = useState<BufferGeometry>()
-  const navigate = useNavigate();
+  const [maxPulses, setMaxPulses] = useState<number>(10);
 
   // Añado pulsos hasta un máximo de X por pregunta:
-  const maxPulses = 10;
   const [pulses, setPulses] = useState(0);
 
   useEffect(() => {
     const stlLoader = new STLLoader()
-    stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
+    stlLoader.load("/Models/angela.stl", geo => {
       setGeometry(geo)
     })
-
     // Load options:
     stlLoader.load("/Models/monkey.stl", geo => {
       setOptionA(geo)
@@ -77,37 +75,35 @@ const ThreeD = (props: PropsThree) => {
       setOptionD(geo)
     })
 
-    //setTimeout(makeMagic.bind(this), 5000);
     setInterval(() => {
       let n = Math.random();
       setPulses(n);
-    }
-      , 1000);
+    }, 5000);
+
   }, [setPulses])
 
 
   const addToUnicorn = (e: any) => {
-    console.log("pulses", pulses);
-
-    const p = e.point;
-    const cube: CubeProps = {
-      x: p.x, y: p.y, z: p.z
+    //console.log("pulses", maxPulses);
+    if (maxPulses > 0) {
+      const p = e.point;
+      const cube: CubeProps = {
+        x: p.x, y: p.y, z: p.z
+      }
+      props.addOwnCube(cube);
+      let msg: string = cube.x.toString() + ";" + cube.y.toString() + ";" + cube.z.toString() + ";0";
+      props.sendWsMsg(msg);
+      setMaxPulses(maxPulses - 1);
+      //setPulses(pulses + 1);
     }
-    props.addOwnCube(cube);
-
-    let msg: string = cube.x.toString() + ";" + cube.y.toString() + ";" + cube.z.toString() + ";0";
-
-
-    let pp = pulses + 1;
-    props.sendWsMsg(msg);
-    setPulses(pp);
-
   }
+
   let q: number = 0;
   let qq = localStorage.getItem('question');
   if (qq !== null) {
     q = +qq;
   }
+
   return (
     <>
       <h5> {ALLQUESTIONS[Number(q)].Text}</h5>
@@ -115,16 +111,16 @@ const ThreeD = (props: PropsThree) => {
 
         <Canvas>
           <OrbitControls />
-          <ambientLight  intensity={0.8} />
-          <Stars count={99990} />
-           <spotLight
+          <ambientLight color="#00ffff" intensity={0.8} />
+          <Stars count={9999} />
+          <spotLight
             angle={0.3}
             position={[10, 15, 10]}
           />
           <spotLight
             angle={0.3}
             position={[-10, 15, 10]}
-          /> 
+          />
           {/*         
         <Box
           addCubes={(x: number, y: number, z: number) => {
@@ -149,18 +145,16 @@ const ThreeD = (props: PropsThree) => {
           }} /> */}
 
 
-          {/* 
-                <mesh geometry={geometry}
+          {/*                 <mesh geometry={geometry}
           //scale={[0.04, 0.04, 0.04]}
           // position={[0, -1, -1]}
-          position={[0, 0, 2]}
-          scale={[0.4, 0.4, 0.4]}
-          rotation={[3 / 2 * Math.PI, -4 / 2 * Math.PI, -4 / 2 * Math.PI]}
-          onPointerUp={(e) => addToUnicorn(e)}
+          position={[0, 0, 0]}
+          scale={[0.004, 0.004, 0.004]}
+          rotation={[0 / 2 * Math.PI, -0 / 2 * Math.PI, -1 / 2 * Math.PI]}
         >
           <meshStandardMaterial
-            color="#cc0000" />
-        </mesh> */}
+            color="#000000" />
+        </mesh>  */}
 
           <mesh geometry={optionA}
             position={[-1, -2.5, 0]}
@@ -169,8 +163,8 @@ const ThreeD = (props: PropsThree) => {
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-            metalness={0.55}
-            roughness={0.29}
+              metalness={0.55}
+              roughness={0.29}
               color="#ff0000" />
           </mesh>
           <mesh geometry={optionB}
@@ -180,8 +174,8 @@ const ThreeD = (props: PropsThree) => {
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-            metalness={0.35}
-            roughness={0.29}
+              metalness={0.35}
+              roughness={0.29}
               color="#06911f" />
           </mesh>
           <mesh geometry={optionC}
@@ -191,24 +185,24 @@ const ThreeD = (props: PropsThree) => {
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-            metalness={0.45}
-            roughness={0.39}
-            emissive={"#0000ff"}
-            emissiveIntensity={0.9}
+              metalness={0.45}
+              roughness={0.39}
+              emissive={"#0000ff"}
+              emissiveIntensity={0.9}
               color="#ff2be6"
-               />
+            />
           </mesh>
 
           <mesh geometry={optionD}
             position={[-1, 1, -1]}
             scale={[0.05, 0.05, 0.05]}
-            rotation={[-1 / 2 * Math.PI, 0/2 * Math.PI, 1/2*Math.PI ]}
+            rotation={[-1 / 2 * Math.PI, 0 / 2 * Math.PI, 1 / 2 * Math.PI]}
             onPointerUp={(e) => addToUnicorn(e)}
           >
             <meshStandardMaterial
-            metalness={0.35}
-            roughness={0.39}
-            //emissive="#ffffff"
+              metalness={0.35}
+              roughness={0.39}
+              //emissive="#ffffff"
               color="#6669ff" />
           </mesh>
 
@@ -219,15 +213,25 @@ const ThreeD = (props: PropsThree) => {
               return <mesh
                 key={index}
                 position={[key.x, key.y, key.z]}
-                rotation={[0, 3, 2]}
-                scale={[0.05, 0.05, 0.05]}
+                scale={[0.1, 0.1, 0.1]}
               >
-                <boxBufferGeometry
-                  attach="geometry"
-                />
-                <meshStandardMaterial color="#0f0f0f" />
+                <boxBufferGeometry attach="geometry"/>
+                 <meshStandardMaterial color="#000000" />
               </mesh>;
+
+              /*
+              return <mesh geometry={geometry}
+                position={[key.x, key.y, key.z]}
+                scale={[0.0005, 0.001, 0.001]}
+                rotation={[0 / 2 * Math.PI, -0 / 2 * Math.PI, -1 / 2 * Math.PI]}
+              >
+                <meshStandardMaterial
+                  color="#000000" />
+              </mesh>
+              */
+
             }
+
             )
           }
 
