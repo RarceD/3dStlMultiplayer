@@ -6,14 +6,19 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CommentsDto } from '../interfaces/Wedding';
 
-function Comments() {
-  const [gameStatus, setGameStatus] = useState(0);
+interface Props {
+  urlToPost: string,
+  webName: string
+}
+function Comments(props: Props) {
+  const urlToPost: string = props.urlToPost;
+  const webName: string = props.webName;
   const [comments, setComments] = useState<CommentsDto[]>([]);
   const navigate = useNavigate();
 
 
 
-  const GetGameStatus = () => {
+  const GetCommnents = () => {
     const requestOptions = {
       method: 'GET',
       mode: "cors" as RequestMode,
@@ -22,7 +27,7 @@ function Comments() {
         'Content-Type': 'application/json'
       }
     };
-    fetch(URL_REQUEST + "bulling", requestOptions)
+    fetch(URL_REQUEST + urlToPost, requestOptions)
       .then(response => response.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
@@ -40,50 +45,50 @@ function Comments() {
         'Content-Type': 'application/json'
       }
     };
-    fetch(URL_REQUEST + "Bulling?msg/" + msg, requestOptions)
+    fetch(URL_REQUEST + urlToPost + "?msg/" + msg, requestOptions)
       .then(response => response.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
         console.log("response", response);
-        GetGameStatus();
+        GetCommnents();
       });
   }
   useEffect(() => {
-    GetGameStatus();
-    const interval = setInterval(() => GetGameStatus(), 10000);
-    return () => clearInterval(interval);
+    GetCommnents();
+    //const interval = setInterval(() => GetGameStatus(), 10000);
+    //return () => clearInterval(interval);
   }, [])
 
   const ShowPlayers = (players: CommentsDto[]) => {
 
     return (
       players.map((p, index) =>
-          <ListItem alignItems="flex-start"
-            key={p.msg + index}
-          >
-            <ListItemAvatar>
-              <Avatar alt="Remy Sharp" src={"/images/icon" + Math.floor(Math.random() * 13).toString() + ".png"} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={p.msg}
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                  </Typography>
-                </React.Fragment>
-              }
-            />
-          </ListItem>
+        <ListItem alignItems="flex-start"
+          key={p.msg + index}
+        >
+          <ListItemAvatar>
+            <Avatar alt="Remy Sharp" src={"/images/icon" + Math.floor(Math.random() * 13).toString() + ".png"} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={p.msg}
+            secondary={
+              <React.Fragment>
+                <Typography
+                  sx={{ display: 'inline' }}
+                  component="span"
+                  variant="body2"
+                  color="text.primary"
+                >
+                </Typography>
+              </React.Fragment>
+            }
+          />
+        </ListItem>
       )
     );
   }
 
-// <Divider variant="inset" component="li" />
+  // <Divider variant="inset" component="li" />
 
   return (
     <>
@@ -100,7 +105,7 @@ function Comments() {
         </Grid>
         <Grid item xs={12} >
           <Typography variant="h4" component="h2" align='center'>
-            Insultario
+            {webName}
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -119,7 +124,10 @@ function Comments() {
             fullWidth
             variant="contained"
             onClick={() => {
-              navigate("/comments/publish")
+              if (urlToPost === "noe")
+                navigate("/commentsnoe/publish")
+              else
+                navigate("/comments/publish")
             }}
             sx={{ mt: 3, mb: 2 }}
           >

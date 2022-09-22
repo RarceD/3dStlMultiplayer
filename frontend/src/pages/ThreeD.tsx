@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import { Button } from '@mui/material';
 import { URL_REQUEST } from '../util/util';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
 import { BufferGeometry } from 'three'
@@ -38,7 +38,6 @@ const Box = (props: Props) => {
 }
 
 
-
 interface PropsThree {
   sendWsMsg: (msg: string) => void,
   spots: CubeProps[],
@@ -58,9 +57,11 @@ const ThreeD = (props: PropsThree) => {
 
   useEffect(() => {
     const stlLoader = new STLLoader()
+    /*
     stlLoader.load("/Models/angela.stl", geo => {
       setGeometry(geo)
     })
+    */
     // Load options:
     stlLoader.load("/Models/monkey.stl", geo => {
       setOptionA(geo)
@@ -69,7 +70,7 @@ const ThreeD = (props: PropsThree) => {
       setOptionB(geo)
     })
     stlLoader.load("/Models/CuteUnicorn2.stl", geo => {
-      setOptionC(geo)
+      setOptionC(geo);
     })
     stlLoader.load("/Models/hippo.stl", geo => {
       setOptionD(geo)

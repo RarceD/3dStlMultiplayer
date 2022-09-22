@@ -5,7 +5,11 @@ import { URL_REQUEST } from '../util/util';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, TextField } from '@mui/material';
 
-const CommentsPublish = () => {
+interface Props{
+  urlToPost: string
+}
+const CommentsPublish = (props: Props) => {
+  const urlToPost: string = props.urlToPost;
   const [msg, setMsg] = useState<string>("");
   const [responseBack, setResponseBack] = useState<string>("");
   const navigate = useNavigate();
@@ -22,7 +26,7 @@ const CommentsPublish = () => {
       body: JSON.stringify(data)
 
     };
-    fetch(URL_REQUEST + "bulling", requestOptions)
+    fetch(URL_REQUEST + urlToPost, requestOptions)
       .then(response => response.json())
       .catch(error => console.error('Error:', error))
       .then(response => {
@@ -50,7 +54,10 @@ const CommentsPublish = () => {
       });
   }
   const handleClose = () => {
-    navigate("/comments");
+    if (urlToPost === "noe")
+      navigate("/commentsnoe");
+    else
+      navigate("/comments");
   }
 
   return (
