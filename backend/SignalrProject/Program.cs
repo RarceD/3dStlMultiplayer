@@ -20,6 +20,8 @@ DbClients d = new DbClients();
 builder.Services.AddSingleton<DbClients>(d);
 DbBulling b = new DbBulling();
 builder.Services.AddSingleton<DbBulling>(b);
+DbNoe c = new DbNoe();
+builder.Services.AddSingleton<DbNoe>(c);
 
 SignalrHub signalrHub = new SignalrHub();
 builder.Services.AddSingleton<SignalrHub>(signalrHub);
