@@ -22,7 +22,7 @@ public class SignalrHub : Hub
     public async Task NewMessage(string user, string message)
     {
         // Received location from user:
-        Console.WriteLine("user" + user + message);
+        // Console.WriteLine("user" + user + message);
         var pos = message.Split(";");
 
         // Return back to all users the locations:
@@ -58,12 +58,12 @@ public class SignalrHub : Hub
     }
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Console.WriteLine("OnDisconnect");
+        //Console.WriteLine("OnDisconnect");
         await base.OnDisconnectedAsync(exception);
     }
     public override async Task OnConnectedAsync()
     {
-        Console.WriteLine("OnConnect");
+        //Console.WriteLine("OnConnect");
         await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
         await base.OnConnectedAsync();
     }
