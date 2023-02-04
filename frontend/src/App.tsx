@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import Connector from './signalRConnection';
 import Main from './pages/Main';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import NoPulse from './pages/NoPulse';
 import Privacity from './pages/Privacity';
 import Waiting from './pages/Waiting';
 import Config from './pages/Config';
 import ThreeD from './pages/ThreeD';
-import Wedding from './pages/Wedding';
-import WeddingPublish from './pages/WeddingPublish';
+
 import Login from './pages/Login';
 import { CubeProps } from './interfaces/Cubes';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
@@ -84,27 +82,17 @@ function App() {
 
   });
 
-  useEffect(() => {
-    //setInterval(function(){ modifyStuff() }, 2000);
-  }, [])
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/main" element={<Main gameData={gameStatus} playerResponses={playerResponses} />} />
-        <Route path="/noPulse" element={<NoPulse />} />
         <Route path="/comments" element={<Comments urlToPost={'bulling'} webName={'Insultario'} />} />
         <Route path="/comments/publish" element={<CommentsPublish urlToPost={'bulling'}/>} />
-        <Route path="/commentsnoe" element={<Comments urlToPost={'noe'} webName={'DiccionarioMal'}/>} />
-        <Route path="/commentsnoe/publish" element={<CommentsPublish urlToPost={'noe'}/>} />
         <Route path="/privacity" element={<Privacity />} />
         <Route path="/waiting" element={<Waiting gameData={gameStatus} />} />
         <Route path="/config" element={<Config />} />
         <Route path="/*" element={<Login />} />
-        <Route path="/wedding" element={<Wedding />} />
-        <Route path="/wedding/publish" element={<WeddingPublish />} />
-        <Route path="/now" element={<Wedding />} />
-        <Route path="/noe/publish" element={<WeddingPublish />} />
         <Route path="/3d" element={
           <ThreeD
             sendWsMsg={(msg: string) => {

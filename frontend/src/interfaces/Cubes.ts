@@ -1,5 +1,7 @@
 export interface CubeProps {
     x: number,
     y: number,
-    z: number
+    z: number,
+    clear?: number
+
 }

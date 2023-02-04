@@ -1,18 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import { Button } from '@mui/material';
-import { URL_REQUEST } from '../util/util';
-import { Canvas, useLoader } from '@react-three/fiber';
+import { useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
-import { Physics } from '@react-three/cannon';
 import { BufferGeometry } from 'three'
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import Connector from '../signalRConnection';
 import { CubeProps } from '../interfaces/Cubes';
-import { StopScreenShare } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { ALLQUESTIONS } from '../interfaces/Questions';
 
 interface Props {
   addCubes: any,
@@ -107,7 +98,6 @@ const ThreeD = (props: PropsThree) => {
 
   return (
     <>
-      <h5> {ALLQUESTIONS[Number(q)].Text}</h5>
       <div style={{ width: "100vw", height: "100vh" }}>
 
         <Canvas>

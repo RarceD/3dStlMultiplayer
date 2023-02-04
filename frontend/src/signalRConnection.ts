@@ -1,7 +1,7 @@
 import * as signalR from "@microsoft/signalr";
-//const URL = process.env.HUB_ADDRESS ?? "https://localhost:44359/hub"; //or whatever your backend port is
+const URL = process.env.HUB_ADDRESS ?? "https://localhost:44359/hub"; //or whatever your backend port is
 //const URL = process.env.HUB_ADDRESS ?? "https://192.168.0.62:44359/hub"; //or whatever your backend port is
- const URL = process.env.HUB_ADDRESS ?? "http://151.80.56.216:5400/hub"; //or whatever your backend port is
+ //const URL = process.env.HUB_ADDRESS ?? "http://151.80.56.216:5400/hub"; //or whatever your backend port is
 export default class Connector {
     private connection: signalR.HubConnection;
     // public events: (onMessageReceived: (username: string, message: string) => void) => void;
