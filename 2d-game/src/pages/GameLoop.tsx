@@ -1,8 +1,15 @@
 
 import { useEffect, useState } from 'react'
+import { Player } from '../interfaces/Player';
 
 function GameLoop() {
     const [count, setCount] = useState(0)
+    const [players, setPlayers] = useState<Player[]>([ {
+        position: {
+            x: 50,
+            y: 50
+        }
+    }])
     let ctx: any = null;
     let canvas: any = null;
     let x: any = 0;
@@ -30,7 +37,7 @@ function GameLoop() {
     }
     function drawMyPlayer() {
         ctx.beginPath();
-        ctx.arc(50, 50, 10, 0, Math.PI * 2);
+        ctx.arc(players[0].position.x, players[0].position.y, 10, 0, Math.PI * 2);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
@@ -43,11 +50,21 @@ function GameLoop() {
         x += -2;
         y += -2;
     }
-    setInterval(refresh, 50);
 
+    setInterval(refresh, 100);
+
+    const HandleUpBtn = () => {
+        players[0].position.x += 20;
+
+    }
+    console.log("render");
     return (
-        <>
-        </>
+        <div>
+        <button onClick={HandleUpBtn}>UP</button>
+        <button>DOWN</button>
+        <button>LEFT</button>
+        <button>RIGHT</button>
+        </div>
     )
 }
 
