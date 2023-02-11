@@ -1,99 +1,91 @@
 import { createRealtimeUpdate } from "./realtime";
 import { Player } from "../interfaces/Player";
-
+import { RandomIntFromInterval, RandomRainbowColor } from "../util/util";
 
 export interface Sim {
     init: (canvasElement: HTMLCanvasElement) => void,
-    hasInit: () => boolean,
-    spawn: (count: number) => void,
+    start: (count: number) => void,
     clear: () => void,
-    setPerformanceMode: (on: boolean) => void,
-    setShowFPS: (on: boolean) => void,
+    move: () => void,
+    onMouseDown: (x: number, y: number) => void
 }
 
-export const createSim = () => {
-
-    const CELL_SIZE = 16;
+export const CreateGameLoop = () => {
     let canvas: HTMLCanvasElement | null = null;
     let ctx: CanvasRenderingContext2D | null = null;
-    let showGrid: boolean = true;
-    let showFPS: boolean = true;
-    let enablePerformanceMode: boolean = true;
-    let players: Player[] = [{
-        position: {
-            x: 10,
-            y: 10
-        }
-    }];
-    //let grid: Cell[][];
+    let players: Player[] = [];
 
     const init = (canvasElement: HTMLCanvasElement): void => {
-
         if (canvas !== null) {
             console.error('Cannot re-initialise the simulation');
             return;
         }
         canvas = canvasElement;
         ctx = canvas.getContext("2d")!;
-
-        //grid = generateGridFromCanvas(canvas, CELL_SIZE, '#ffe282');
-
         createRealtimeUpdate(120, window, tick);
-
     }
     const tick = (dt: number, fps: number): void => {
         if (canvas === null || ctx === null) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        renderDevider();
         renderBalls();
+    }
+    const renderDevider = (): void => {
+        if (canvas === null || ctx === null) return;
+        ctx.beginPath();
+        ctx.fillStyle = "#ffffff";
+        ctx.lineWidth = 1;
+        ctx.rect(0,  canvas.height / 2, canvas.width, 10);
+        ctx.fill();
+        ctx.stroke();
     }
     const renderBalls = (): void => {
         if (ctx === null) return;
         for (let p of players) {
             ctx.beginPath();
+            ctx.fillStyle = p.color;
             ctx.lineWidth = 1;
-            ctx.arc(p.position.x, p.position.y, 20, 0, 2 * Math.PI);
+            ctx.arc(p.position.x, p.position.y, 10, 0, 2 * Math.PI);
             ctx.fill();
             ctx.stroke();
         }
-
     }
 
-    const hasInit = (): boolean => {
-        return canvas !== null;
-    }
-
-    const spawn = (count: number): void => {
-
+    const start = (count: number): void => {
         if (canvas === null) {
             console.error('Simulation has not been initialised');
             return;
         }
-
-        for (let i = 0; i < count; i++) {
-            //const boid: Boid = createRandomlyOnACanvas(canvas, 4, 8, '#FFFFFFFF', 32);
-            //randomizeVelocityDirection(boid);
-            //boids.push(boid);
+        for (let i = 0; i < count; ++i) {
+            let p: Player = {
+                position: {
+                    x: RandomIntFromInterval(0, 500),
+                    y: RandomIntFromInterval(0, 500)
+                },
+                color: "#ffa500"
+            };
+            players.push(p);
         }
-
     }
     const clear = () => {
+    }
+    const onMouseDown = (x: number, y: number) => {
+        let p: Player = {
+            position: {
+                x: x - 30,
+                y: y - 30 
+            },
+            color: RandomRainbowColor()
+
+        };
+        players.push(p);
+    }
+
+    const move = () => {
         for (let p of players) {
-            p.position.x += 20;
+            p.position.x += RandomIntFromInterval(-10, 10);
+            p.position.y += RandomIntFromInterval(-10, 10);
         }
     }
-    const setShowFPS = () => {
-    }
-    const setPerformanceMode = () => {
-    }
-    const setShowGrid = () => {
-    }
-    return {
-        init,
-        hasInit,
-        spawn,
-        clear,
-        setShowGrid,
-        setPerformanceMode,
-        setShowFPS
-    } as Sim;
+    return { init, start, clear, move, onMouseDown } as Sim;
 }

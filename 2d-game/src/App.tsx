@@ -1,29 +1,31 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import './Game.css'
 import GameLoop from './pages/GameLoop'
 import React from 'react';
 import SimulationCanvas from './components/SimulationCanvas';
-import { createSim, Sim } from './logic/sim';
+import { CreateGameLoop, Sim } from './logic/sim';
 
 const PersistentCanvas = React.memo(SimulationCanvas);
 
 function App() {
-  const sim = useRef<Sim>(createSim());
+  const sim = useRef<Sim>(CreateGameLoop());
+
+  // When simulation start I Load population:
+  useEffect(()=> {
+    //sim.current.start(1);
+  });
 
   const HandleUpBtn = () => {
-    sim.current.clear();
+    sim.current.move();
   }
 
   return (
     <div className="App">
-      <PersistentCanvas sim={sim.current} />
+      <div className="title"> Frase de Abuela o Frase de Ángela</div> <PersistentCanvas sim={sim.current} />
       <button onClick={HandleUpBtn}>UP</button>
     </div>
   )
 }
-
-//<canvas id="myCanvas" width="640" height="640"></canvas>
-//<GameLoop />
-
 export default App

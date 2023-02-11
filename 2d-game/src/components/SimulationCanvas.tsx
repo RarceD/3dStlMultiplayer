@@ -6,24 +6,20 @@ export type CanvasProps = {
 }
 
 function SimulationCanvas(props: CanvasProps) {
-    const sim = props.sim;
-    //Default values for the sim and UI to start with
-    const defaultShowGrid = true;
-    const defaultEnablePerformance = true;
-    const defaultShowFPS = true;
-
+    const sim: Sim = props.sim;
     const canvasRef: Ref<HTMLCanvasElement> = createRef();
 
     useEffect(() => {
         const canvas: HTMLCanvasElement = canvasRef?.current!;
         sim.init(canvas);
-        sim.setShowGrid(defaultShowGrid);
-        sim.setShowFPS(defaultShowFPS);
-        sim.setPerformanceMode(defaultEnablePerformance);
     }, []);
+    const draw = (e: any) =>{
+        sim.onMouseDown(e.clientX,e.clientY);
+    }
 
     return (
-        <canvas className="canvas" ref={canvasRef} width="800" height="640" />
+        <canvas onMouseDown={draw} className="canvas" ref={canvasRef}ç
+          width="360" height="800" />
     )
 }
 
